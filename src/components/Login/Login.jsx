@@ -15,7 +15,8 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post(AppUrl.Login, { email, password });
-      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("token", response.data.authorisation.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
       navigate("/");
     } catch (error) {
       setError("Invalid email or password");

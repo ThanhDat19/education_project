@@ -6,12 +6,12 @@ import { useParams } from "react-router-dom";
 import LearnCourse from "../components/LearnCourse/LearnCourse";
 
 const CourseDetailsPage = () => {
-  const { slug } = useParams();
+  const { id } = useParams();
   return (
     <Fragment>
       <TopNavigation />
       {/* <PageTop pageTitle="Course Details"/> */}
-      <LearnCourse  slug={slug}  />
+      <LearnCourse  id={id}  />
       <Footer />
     </Fragment>
   );

@@ -31,12 +31,12 @@ const AppRouter = () => {
         <Route path="/privacy" element={<PrivacyPage />} exact />
         <Route path="/project-details" element={<ProjectDetailPage />} exact />
         <Route
-          path="/course-details/:slug"
+          path="/course-details/:id"
           element={<CourseDetailsPage />}
           exact
         />
         <Route
-          path="/course-details/:slug/learn"
+          path="/course-details/:id/learn"
           element={<LearnCoursePage />}
           exact
         />

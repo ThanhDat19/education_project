@@ -31,7 +31,7 @@ const Courses = () => {
             {parse(item.description)}
           </p>
           <Link
-            to={"/course-details/" + item.slug}
+            to={"/course-details/" + item.id}
             className="float-left courseViewMore"
           >
             Xem Chi Tiết

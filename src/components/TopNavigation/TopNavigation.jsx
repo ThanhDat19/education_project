@@ -40,42 +40,12 @@ const TopNavigation = () => {
   const checkLoggedIn = async () => {
     // Kiểm tra trong local storage nếu có token
     let token = localStorage.getItem("token");
+    let user = localStorage.getItem("user");
     // console.log(token);
     if (token) {
       setIsLoggedIn(true);
-      // Lấy thông tin người dùng từ token hoặc từ server
-      // Ví dụ:
-      // const userInfo = decodeToken(token);
-      // setUserName(userInfo.name);
-      let headers = {
-        "Authorization": `Bearer ${token}` 
-       }
-       
-      //  let reqOptions = {
-      //   url: "http://127.0.0.1:8000/api/user",
-      //   method: "GET",
-      //   headers: headersList,
-      // }
 
-      // const headers = {
-      //   Authorization: `Bearer ${token}`,
-      // };
-      // let response = await axios.request(reqOptions);
-      axios
-        .get(AppUrl.getUserLogin , {headers})
-        .then(function (response) {
-          // handle success
-          console.log(response.data);
-        })
-        .catch(function (error) {
-          // handle error
-          console.log(error);
-        })
-        .finally(function () {
-          // always executed
-        });
-
-      setUserName("John Doe"); // Thay thế bằng thông tin người dùng thực tế
+      setUserName(JSON.parse(user).name); // Thay thế bằng thông tin người dùng thực tế
     } else {
       setIsLoggedIn(false);
       setUserName("");
@@ -91,6 +61,7 @@ const TopNavigation = () => {
     // Ví dụ:
     // Xóa token trong localStorage
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     // Sau đó cập nhật trạng thái đăng nhập
     setIsLoggedIn(false);
     setUserName("");
@@ -157,7 +128,7 @@ const TopNavigation = () => {
                     <NavLink
                       activeClassName="menu_active"
                       className={navBarItem}
-                      to="/logout"
+                      to="/"
                       onClick={handleLogout}
                     >
                       ĐĂNG XUẤT

@@ -13,6 +13,7 @@ const Quiz = ({ tests }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     // Gửi câu trả lời đến server hoặc xử lý dữ liệu khác ở đây
+    
   };
 
   return (

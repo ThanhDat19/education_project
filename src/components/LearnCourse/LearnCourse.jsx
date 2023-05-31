@@ -11,19 +11,19 @@ import Tabs from "react-bootstrap/Tabs";
 import Quiz from "../Quiz/Quiz";
 
 const LearnCourse = (props) => {
-  const [slug] = useState(props.slug);
+  const [id] = useState(props.id);
   const [lessons, setLessons] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [tests, setTests] = useState([]);
   const [selectedLesson, setSelectedLesson] = useState(null);
 
   useEffect(() => {
-    RestClient.GetRequest(AppUrl.CourseDetails + slug + "/learn").then(
+    RestClient.GetRequest(AppUrl.CourseDetails + id + "/learn").then(
       (result) => {
         setLessons(result);
       }
     );
-  }, [slug]);
+  }, [id]);
 
   useEffect(() => {
     if (selectedLesson) {

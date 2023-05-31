@@ -8,12 +8,12 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 const CourseDetailsPage = () => {
-  const { slug } = useParams();
+  const { id } = useParams();
   return (
     <Fragment>
       <TopNavigation />
       <PageTop pageTitle="Course Details"/>
-      <CourseDetails  slug={slug}  />
+      <CourseDetails  id={id}  />
       <Footer />
     </Fragment>
   );

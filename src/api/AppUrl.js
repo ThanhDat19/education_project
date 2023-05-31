@@ -31,7 +31,7 @@ class AppUrl {
   static Payment = this.BaseUrl + '/payment/';
   //Authentication
   static Login = this.BaseUrl + '/login';
-  static getUserLogin = this.BaseUrl + '/user';
+  static getUserLogin = this.BaseUrl + '/user-login';
 }
 
 export default AppUrl;
