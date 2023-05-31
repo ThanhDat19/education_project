@@ -16,11 +16,23 @@ const LearnCourse = (props) => {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [tests, setTests] = useState([]);
   const [selectedLesson, setSelectedLesson] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     RestClient.GetRequest(AppUrl.CourseDetails + id + "/learn").then(
       (result) => {
         setLessons(result);
+        let token = localStorage.getItem("token");
+        let user = localStorage.getItem("user");
+        if (token) {
+          setIsLoggedIn(true);
+
+          setUser(JSON.parse(user));
+        } else {
+          setIsLoggedIn(false);
+          setUser(null);
+        }
       }
     );
   }, [id]);
@@ -129,8 +141,7 @@ const LearnCourse = (props) => {
             >
               <Tab eventKey="comment" title="Bình Luận"></Tab>
               <Tab eventKey="test" title="Kiểm tra">
-                
-                {tests && <Quiz tests={tests.data} />}
+                {tests && <Quiz tests={tests.data} user={user}/>}
               </Tab>
             </Tabs>
           </Col>
