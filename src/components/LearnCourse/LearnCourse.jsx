@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Fragment } from "react";
-import { Col, Container, Row, Card } from "react-bootstrap";
+import { Col, Container, Row, Card, ListGroup } from "react-bootstrap";
 import RestClient from "../../api/RestClient";
 import AppUrl from "../../api/AppUrl";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
@@ -9,6 +9,7 @@ import YouTube from "react-youtube";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import Quiz from "../Quiz/Quiz";
+import Comment from "../Comment/Comment";
 
 const LearnCourse = (props) => {
   const [id] = useState(props.id);
@@ -18,10 +19,11 @@ const LearnCourse = (props) => {
   const [selectedLesson, setSelectedLesson] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    RestClient.GetRequest(AppUrl.CourseDetails + id + "/learn").then(
-      (result) => {
+    RestClient.GetRequest(AppUrl.CourseDetails + id + "/learn")
+      .then((result) => {
         setLessons(result);
         let token = localStorage.getItem("token");
         let user = localStorage.getItem("user");
@@ -33,8 +35,10 @@ const LearnCourse = (props) => {
           setIsLoggedIn(false);
           setUser(null);
         }
-      }
-    );
+      })
+      .finally(() => {
+        setIsLoading(false); // Kết thúc tải dữ liệu
+      });
   }, [id]);
 
   useEffect(() => {
@@ -58,15 +62,6 @@ const LearnCourse = (props) => {
     setSelectedLesson(id);
   };
 
-  const opts = {
-    height: "498",
-    width: "100%",
-    // playerVars: {
-    // // https://developers.google.com/youtube/player_parameters
-    // autoplay: 1,
-    // },
-  };
-
   const YouTubeView = useMemo(() => {
     let yt = (
       <iframe
@@ -85,68 +80,73 @@ const LearnCourse = (props) => {
   const myView =
     lessons != null
       ? lessons.map((lesson) => (
-          <li
+          <ListGroup.Item
             key={lesson.id}
             onClick={() => handleVideoSelect(lesson.video_url, lesson.id)}
+            action
           >
             <Card>
               <Card.Body>
-                <blockquote className="blockquote mb-0">
-                  <p>
-                    {lesson.position}. {lesson.title}
-                  </p>
-                  <footer className="blockquote-footer">
-                    <FontAwesomeIcon
-                      icon={faPlay}
-                      fontSize={15}
-                      color="green"
-                    />{" "}
-                    5 phút
-                  </footer>
-                </blockquote>
+                <Card.Text>
+                  {lesson.position}. {lesson.title}
+                </Card.Text>
+                <Card.Text>
+                  <FontAwesomeIcon icon={faPlay} /> 5 phút
+                </Card.Text>
               </Card.Body>
             </Card>
-          </li>
+          </ListGroup.Item>
         ))
       : "No data";
+
   // console.log(tests);
   return (
     <>
-      <Container className="mt-5">
-        <Row className="mt-5">
-          <Col lg={8} md={8} sm={12} className="mt-2">
-            {/* Xem Video */}
-            {/* <YouTube videoId={selectedVideo} opts={opts} /> */}
-            {YouTubeView}
-          </Col>
-          <Col lg={4} md={4} sm={12} className="mt-2">
-            {/* Danh sách bài học */}
-            <div className="widget_feature">
-              <h4 className="widget-title text-center">Nội dung khóa học</h4>
-              <hr />
-              <ul>{myView}</ul>
-            </div>
-          </Col>
-        </Row>
-      </Container>
+      {isLoading ? ( // Kiểm tra trạng thái tải
+        <p>Loading...</p>
+      ) : (
+        <Fragment>
+          <Container className="mt-5">
+            <Row className="mt-5">
+              <Col lg={8} md={8} sm={12} className="mt-2">
+                {/* Xem Video */}
+                {YouTubeView}
+              </Col>
+              <Col lg={4} md={4} sm={12} className="mt-2">
+                {/* Danh sách bài học */}
+                <div className="widget_feature">
+                  <h4 className="widget-title text-center">
+                    Nội dung khóa học
+                  </h4>
+                  <hr />
+                  <ListGroup>{myView}</ListGroup>
+                </div>
+              </Col>
+            </Row>
+          </Container>
 
-      <Container>
-        <Row>
-          <Col lg={8} md={6} sm={12}>
-            {/* Phần bình luận */}
-            <Tabs
-              defaultActiveKey="profile"
-              id="uncontrolled-tab-example"
-              className="mb-3"
-            >
-              <Tab eventKey="comment" title="Bình Luận"></Tab>
-              <Tab eventKey="test" title="Kiểm tra">
-                {tests && <Quiz tests={tests.data} user={user}/>}
-              </Tab>
-            </Tabs>
-          </Col>
-        </Row>
-      </Container>
+          <Container>
+            <Row>
+              <Col lg={8} md={6} sm={12}>
+                <Tabs
+                  defaultActiveKey="comment"
+                  id="uncontrolled-tab-example"
+                  // className="mb-3"
+                  // variant="pills"
+                >
+                  <Tab eventKey="comment" title="Bình Luận">
+                    {/* Phần bình luận */}
+                    <Comment />
+                  </Tab>
+                  <Tab eventKey="test" title="Kiểm tra">
+                    {tests && <Quiz tests={tests.data} user={user} />}
+                  </Tab>
+                </Tabs>
+              </Col>
+            </Row>
+          </Container>
+        </Fragment>
+      )}
     </>
   );
 };

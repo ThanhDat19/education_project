@@ -1,119 +1,193 @@
+import React, { useEffect, useState } from "react";
 import { Fragment } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Card, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import React, { useState, useEffect } from "react";
-import ProductFilter from "./CourseFilter/CourseFilter";
-const AllCourses = () => {
-  const initialProducts = [
-    {
-      id: 1,
-      name: "Product 1",
-      description: "Description 1",
-      options: ["option1", "option2"],
-    },
-    {
-      id: 2,
-      name: "Product 2",
-      description: "Description 2",
-      options: ["option2", "option3"],
-    },
-    {
-      id: 3,
-      name: "Product 3",
-      description: "Description 3",
-      options: ["option1", "option3"],
-    },
-    {
-      id: 4,
-      name: "Product 4",
-      description: "Description 4",
-      options: ["option2"],
-    },
-  ];
+import axios from "axios";
+import parse from "html-react-parser";
+import ReactPaginate from "react-paginate";
+import AppUrl from "../../api/AppUrl";
 
-  const filterOptions = [
-    { label: "Option 1", value: "option1" },
-    { label: "Option 2", value: "option2" },
-    { label: "Option 3", value: "option3" },
-  ];
+const Courses = () => {
+  const [allCourses, setAllCourses] = useState([]);
+  const [totalCourse, setTotalCourse] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [searchTitle, setSearchTitle] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedPriceRange, setSelectedPriceRange] = useState({
+    min: "",
+    max: "",
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filteredCourses, setFilteredCourses] = useState([]);
 
-  const [filteredProducts, setFilteredProducts] = useState(initialProducts);
+  useEffect(() => {
+    getCourses(1);
+  }, []);
 
-  const handleFilterChange = (selectedOptions) => {
-    if (selectedOptions.length === 0) {
-      setFilteredProducts(initialProducts);
-    } else {
-      const filtered = initialProducts.filter((product) =>
-        product.options.some((option) => selectedOptions.includes(option))
-      );
-      setFilteredProducts(filtered);
+  useEffect(() => {
+    filterCourses();
+  }, [allCourses, searchTitle, selectedCategory, selectedPriceRange]);
+
+  const getCourses = async (page) => {
+    try {
+      setCurrentPage(page);
+      const response = await axios.get(AppUrl.CourseAll, { params: { page } });
+      if (response.data.courses.data) {
+        setAllCourses(response.data.courses.data);
+        setLoading(false);
+        setTotalCourse(response.data.courses.total);
+        setTotalPages(response.data.total_pages);
+        console.log(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+      setLoading(false);
     }
   };
 
-  const ProductList = ({ products }) => {
-    return (
-      <div>
-        <h2>Product List</h2>
-        {products.map((product) => (
-          <div key={product.id}>
-            <h3>{product.name}</h3>
-            <p>{product.description}</p>
-          </div>
-        ))}
-      </div>
-    );
+  const filterCourses = () => {
+    const filtered = allCourses.filter((value) => {
+      const isMatchedTitle =
+        searchTitle === "" ||
+        value.title.toLowerCase().includes(searchTitle.toLowerCase());
+
+      const isMatchedCategory =
+        selectedCategory === "" ||
+        value.course_category_id == selectedCategory;
+
+      const isMatchedPriceRange =
+        selectedPriceRange.min === "" ||
+        selectedPriceRange.max === "" ||
+        (value.price >= selectedPriceRange.min &&
+          value.price <= selectedPriceRange.max);
+
+      return isMatchedTitle && isMatchedCategory && isMatchedPriceRange;
+    });
+
+    setFilteredCourses(filtered);
   };
+
+  const handlePageClick = (event) => {
+    getCourses(event.selected + 1);
+  };
+
+  const handleCategoryChange = (event) => {
+    setSelectedCategory(event.target.value);
+  };
+
+  const handlePriceRangeChange = (event) => {
+    setSelectedPriceRange({
+      ...selectedPriceRange,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleSearch = () => {
+    getCourses(1);
+  };
+
+  const renderCourses = () => {
+    if (loading) {
+      return <p>Loading...</p>;
+    }
+
+    if (filteredCourses.length === 0) {
+      return <p>No matching courses found.</p>;
+    }
+
+    return filteredCourses.map((item) => (
+      <Col md={4} key={item.id}>
+        <Card border="light" style={{ margin: "4px" }}>
+          <Card.Img
+            variant="top"
+            src={"http://127.0.0.1:8000" + item.course_image}
+            alt={item.title}
+          />
+          <Card.Body>
+            <Card.Title>{item.title}</Card.Title>
+            <Card.Text>{parse(item.description)}</Card.Text>
+            <Card.Text>$ {item.price}</Card.Text>
+            <Link
+              to={"/course-details/" + item.id}
+              className="float-left courseViewMore"
+            >
+              Xem chi tiết
+            </Link>
+          </Card.Body>
+        </Card>
+      </Col>
+    ));
+  };
+
   return (
     <Fragment>
-      <Container className="text-center">
-        <h1 className="serviceMainTitle">MY COURSES</h1>
+      <Container style={{ minHeight: "100vh" }}>
+        <h1 className="serviceMainTitle text-center">MY COURSES</h1>
         <div className="bottom"></div>
         <Row>
-          <Col lg={3} md={12} sm={0}>
-            <Row>
-              <Form className="d-flex">
-                <Form.Control
-                  type="search"
-                  placeholder="Search"
-                  className="me-2"
-                  aria-label="Search"
-                />
-                <Button>Search</Button>
-              </Form>
-              <div>
-                <ProductFilter
-                  options={filterOptions}
-                  onFilterChange={handleFilterChange}
-                />
-                
-              </div>
-            </Row>
-            <hr />
+          <Col md={3}>
+            <div style={{ marginBottom: "30px" }}>
+              <input
+                style={{
+                  width: "100%",
+                  height: "30px",
+                  marginBottom: filteredCourses.length === 0 ? "0" : "10px",
+                }}
+                type="text"
+                placeholder="Search..."
+                onChange={(e) => setSearchTitle(e.target.value)}
+              />
+              <select
+                style={{ width: "100%", height: "30px", marginBottom: "10px" }}
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+              >
+                <option value="">All Categories</option>
+                <option value="1">Web Development</option>
+                <option value="2">Mobile Development</option>
+                <option value="3">PHP</option>
+              </select>
+              <input
+                style={{ width: "100%", height: "30px" }}
+                type="number"
+                placeholder="Min Price"
+                name="min"
+                value={selectedPriceRange.min}
+                onChange={handlePriceRangeChange}
+              />
+              <input
+                style={{ width: "100%", height: "30px", marginTop: "10px" }}
+                type="number"
+                placeholder="Max Price"
+                name="max"
+                value={selectedPriceRange.max}
+                onChange={handlePriceRangeChange}
+              />
+            </div>
           </Col>
-          <Col lg={6} md={12} sm={12}>
-            <Row>
-              {/* <Col lg={6} md={6} sm={12} className="p-2">
-                <img
-                  className="courseImg"
-                  src="https://img.freepik.com/free-psd/e-learning-banner-design-template_23-2149113592.jpg?w=1060&t=st=1676537180~exp=1676537780~hmac=ff30767983b241621e623765dab5281d4155529a3bd48adc816467a4554fdd8e"
-                  alt="Course"
-                />
-              </Col>
-              <Col lg={6} md={6} sm={12}>
-                <h5 className="text-justify serviceName">Laravel 8</h5>
-                <p className="text-justify serviceDescription">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p>
-                <Link
-                  to="/course-details"
-                  className="float-left courseViewMore"
-                >
-                  View Detail
-                </Link>
-              </Col> */}
-              <ProductList products={filteredProducts} />
-            </Row>
+          <Col md={9}>
+            <Row>{renderCourses()}</Row>
+            <ReactPaginate
+              breakLabel="..."
+              nextLabel="next"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={5}
+              pageCount={totalPages}
+              previousLabel="previous"
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              breakClassName={"page-item"}
+              breakLinkClassName="page-link"
+              marginPagesDisplayed={2}
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+              initialPage={currentPage - 1}
+            />
           </Col>
         </Row>
       </Container>
@@ -121,4 +195,4 @@ const AllCourses = () => {
   );
 };
 
-export default AllCourses;
+export default Courses;
