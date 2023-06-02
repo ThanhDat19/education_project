@@ -62,17 +62,17 @@ const CourseDetails = (props) => {
         setUser(null);
       }
       let response;
-      console.log(user);
+      // console.log(user);
       if (JSON.parse(user)) {
         let user_id = JSON.parse(user).id;
-        console.log(user_id);
+        // console.log(user_id);
         response = await axios.post(AppUrl.CourseDetails + id, {
           user_id,
         });
       } else {
         response = await await axios.post(AppUrl.CourseDetails + id);
       }
-      console.log(response.data);
+      // console.log(response.data);
       setCourse(response.data.data);
       amount = response.data.data.price;
       courseSate = response.data.status;
@@ -149,16 +149,16 @@ const CourseDetails = (props) => {
                     courseID,
                   })
                   .then(function (response) {
-                    console.log(response.data);
+                    // console.log(response.data);
                     updatePaymentState(true);
                     alert(`Transaction completed by ${name}`);
                   })
                   .catch(function (error) {
-                    console.log(error);
+                    // console.log(error);
                   });
               } catch (error) {
                 // Xử lý lỗi
-                console.error("Error creating payment:", error);
+                // console.error("Error creating payment:", error);
                 updatePaymentState(false);
                 return null;
               }
@@ -166,7 +166,7 @@ const CourseDetails = (props) => {
           }}
           onError={(err) => {
             setError(err);
-            console.error("PayPal Checkout onError", err);
+            // console.error("PayPal Checkout onError", err);
           }}
           onCancel={() => {
             // Display cancel message, modal or redirect user to cancel page or back to cart

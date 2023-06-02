@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Fragment } from "react";
 import { Col, Container, Row, Card, ListGroup } from "react-bootstrap";
 import RestClient from "../../api/RestClient";
@@ -25,12 +25,12 @@ const LearnCourse = (props) => {
     RestClient.GetRequest(AppUrl.CourseDetails + id + "/learn")
       .then((result) => {
         setLessons(result);
-        let token = localStorage.getItem("token");
-        let user = localStorage.getItem("user");
-        if (token) {
+        // let token = localStorage.getItem("token");
+        // let user = localStorage.getItem("user");
+        if (props.user) {
           setIsLoggedIn(true);
 
-          setUser(JSON.parse(user));
+          setUser(props.user);
         } else {
           setIsLoggedIn(false);
           setUser(null);
@@ -57,7 +57,7 @@ const LearnCourse = (props) => {
   }, [lessons]);
 
   const handleVideoSelect = (video, id) => {
-    console.log("call handleVideoSelect", id);
+    // console.log("call handleVideoSelect", id);
     setSelectedVideo(video);
     setSelectedLesson(id);
   };
@@ -99,7 +99,6 @@ const LearnCourse = (props) => {
         ))
       : "No data";
 
-  // console.log(tests);
   return (
     <>
       {isLoading ? ( // Kiểm tra trạng thái tải
@@ -128,12 +127,7 @@ const LearnCourse = (props) => {
           <Container>
             <Row>
               <Col lg={8} md={6} sm={12}>
-                <Tabs
-                  defaultActiveKey="comment"
-                  id="uncontrolled-tab-example"
-                  // className="mb-3"
-                  // variant="pills"
-                >
+                <Tabs defaultActiveKey="comment" id="uncontrolled-tab-example">
                   <Tab eventKey="comment" title="Bình Luận">
                     {/* Phần bình luận */}
                     <Comment />

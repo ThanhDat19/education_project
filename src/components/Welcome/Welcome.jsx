@@ -123,7 +123,6 @@ const Welcome = () => {
           </Row>
         </Container>
       </div>
-      v
     </Fragment>
   );
 };

@@ -17,8 +17,8 @@ const TopBanner = () => {
         setSubtitle(result[0]["home_subtitle"]);
       })
       .catch((error) => {
-        setTitle("Education Learning");
-        setSubtitle("Let's to learning every thing");
+        setTitle("EDU Website");
+        setSubtitle("Học lập trình để đi làm");
       });
   }, []);
 
@@ -31,7 +31,7 @@ const TopBanner = () => {
               <Col className="text-center">
                 <h1 className="topTitle">{title}</h1>
                 <h4 className="topSubTitle">{subtitle}</h4>
-                <Button variant="primary">Learn More</Button>
+                <Button variant="primary">Tìm Hiểu Thêm</Button>
               </Col>
             </Row>
           </Container>

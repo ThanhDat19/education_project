@@ -5,16 +5,17 @@ import TopNavigation from "../components/TopNavigation/TopNavigation";
 import { useParams } from "react-router-dom";
 import LearnCourse from "../components/LearnCourse/LearnCourse";
 
-const CourseDetailsPage = () => {
+const LearnCoursePage = ({user}) => {
   const { id } = useParams();
+  console.log(user)
   return (
     <Fragment>
       <TopNavigation />
       {/* <PageTop pageTitle="Course Details"/> */}
-      <LearnCourse  id={id}  />
+      <LearnCourse  id={id} user={user}/>
       <Footer />
     </Fragment>
   );
 };
 
-export default CourseDetailsPage;
+export default LearnCoursePage;

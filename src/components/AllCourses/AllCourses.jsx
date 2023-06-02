@@ -22,7 +22,9 @@ const Courses = () => {
   const [filteredCourses, setFilteredCourses] = useState([]);
 
   useEffect(() => {
-    getCourses(1);
+    setTimeout(() => {
+      getCourses(1);
+    }, 500);
   }, []);
 
   useEffect(() => {
@@ -53,8 +55,7 @@ const Courses = () => {
         value.title.toLowerCase().includes(searchTitle.toLowerCase());
 
       const isMatchedCategory =
-        selectedCategory === "" ||
-        value.course_category_id == selectedCategory;
+        selectedCategory === "" || value.course_category_id == selectedCategory;
 
       const isMatchedPriceRange =
         selectedPriceRange.min === "" ||

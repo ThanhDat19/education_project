@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Fragment } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import AboutPage from "../pages/AboutPage";
 import AllCoursePage from "../pages/AllCoursePage";
 import AllServicePage from "../pages/AllServicePage";
@@ -15,9 +20,37 @@ import TremsPage from "../pages/TremsPage";
 import LearnCoursePage from "../pages/LearnCoursePage";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
+import { Spinner } from "react-bootstrap";
 
 const AppRouter = () => {
-  return (
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      let token = localStorage.getItem("token");
+      let user = localStorage.getItem("user");
+      if (token) {
+        setIsLoggedIn(true);
+
+        setUser(JSON.parse(user));
+      } else {
+        setIsLoggedIn(false);
+        setUser(null);
+      }
+    }
+    fetchData();
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, []);
+
+  return loading ? (
+    <Spinner animation="border" role="status">
+      <span className="visually-hidden">Loading...</span>
+    </Spinner>
+  ) : (
     <Fragment>
       <Routes>
         <Route path="/" element={<HomePage />} exact />
@@ -37,19 +70,17 @@ const AppRouter = () => {
         />
         <Route
           path="/course-details/:id/learn"
-          element={<LearnCoursePage />}
+          element={
+            isLoggedIn ? (
+                <LearnCoursePage user={user} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
           exact
         />
-        <Route
-          path="/login"
-          element={<LoginPage />}
-          exact
-        />
-        <Route
-          path="/register"
-          element={<RegisterPage />}
-          exact
-        />
+        <Route path="/login" element={<LoginPage />} exact />
+        <Route path="/register" element={<RegisterPage />} exact />
       </Routes>
     </Fragment>
   );

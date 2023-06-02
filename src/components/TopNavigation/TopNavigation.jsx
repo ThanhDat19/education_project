@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Container, Navbar, Nav } from "react-bootstrap";
+import { Container, Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import "../../asset/css/custom.css";
 import "../../asset/css/bootstrap.min.css";
 import RestClient from "../../api/RestClient";
 import AppUrl from "../../api/AppUrl";
-import axios from 'axios';
+import axios from "axios";
 
 const TopNavigation = () => {
   const [navBarTitle, setNavBarTitle] = useState("navTitle");
@@ -134,9 +134,32 @@ const TopNavigation = () => {
                       ĐĂNG XUẤT
                     </NavLink>
                   </Nav.Link>
-                  <Nav.Link>
-                    <span className={navBarItem}>{userName}</span>
-                  </Nav.Link>
+                  <NavDropdown
+                    className={navBarItem}
+                    title="QUẢN LÝ"
+                    id="basic-nav-dropdown"
+                  >
+                    <NavDropdown.Item className={navBarItem} href="#action/3.1">
+                      Khóa học của tôi
+                    </NavDropdown.Item>
+                    <NavDropdown.Item className={navBarItem} href="#action/3.2">
+                      Bài kiểm tra
+                    </NavDropdown.Item>
+                    <NavDropdown.Item className={navBarItem} href="#action/3.3">
+                      Câu hỏi và Lựa chọn
+                    </NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item
+                      title={userName}
+                      className={navBarItem}
+                      href="#action/3.4"
+                    >
+                      {userName}
+                      {/* <Nav.Link>
+                        <span className={navBarItem}>{userName}</span>
+                      </Nav.Link> */}
+                    </NavDropdown.Item>
+                  </NavDropdown>
                 </>
               ) : (
                 <Nav.Link>
