@@ -65,7 +65,7 @@ const AppRouter = () => {
         <Route path="/project-details" element={<ProjectDetailPage />} exact />
         <Route
           path="/course-details/:id"
-          element={<CourseDetailsPage />}
+          element={ isLoggedIn?<CourseDetailsPage user={user} /> :<CourseDetailsPage />}
           exact
         />
         <Route

@@ -51,39 +51,38 @@ const CourseDetails = (props) => {
 
   useEffect(() => {
     async function fetchData() {
-      let token = localStorage.getItem("token");
-      let user = localStorage.getItem("user");
-      if (token) {
-        setIsLoggedIn(true);
+      console.log(props.user);
 
-        setUser(JSON.parse(user));
+      if (props.user) {
+        setIsLoggedIn(true);
       } else {
         setIsLoggedIn(false);
-        setUser(null);
       }
+
       let response;
-      // console.log(user);
-      if (JSON.parse(user)) {
-        let user_id = JSON.parse(user).id;
+      if (props.user) {
+        let user_id = props.user.id;
         // console.log(user_id);
         response = await axios.post(AppUrl.CourseDetails + id, {
           user_id,
         });
       } else {
-        response = await await axios.post(AppUrl.CourseDetails + id);
+        response = await axios.post(AppUrl.CourseDetails + id);
       }
-      // console.log(response.data);
+
+      console.log(response.data);
       setCourse(response.data.data);
       amount = response.data.data.price;
       courseSate = response.data.status;
       if (courseSate) {
+
         updatePaymentState(true);
       }
     }
     fetchData();
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    // console.log(paymentState);
+
+    setLoading(false);
   }, [id]);
 
   const opts = {
@@ -98,7 +97,7 @@ const CourseDetails = (props) => {
     event.target.playVideo();
   };
 
-  const PayPalView = user ? (
+  const PayPalView = props.user ? (
     !paymentState ? (
       <PayPalScriptProvider
         options={{
@@ -136,7 +135,7 @@ const CourseDetails = (props) => {
                 const paymentStatus = details.status;
                 const userID = user.id;
                 const courseID = id;
-                // console.log(userID +"-----"+ courseID)
+                console.log(userID + "-----" + courseID);
                 axios
                   .post(AppUrl.BaseUrl + "/create-payment", {
                     paymentID,
@@ -249,7 +248,7 @@ const CourseDetails = (props) => {
           </Col>
         </Row>
       </Container>
-      <Container>
+      {/* <Container>
         <Row>
           <Col lg={8} md={6} sm={12}>
             <div className="widget_feature">
@@ -302,7 +301,7 @@ const CourseDetails = (props) => {
             </div>
           </Col>
         </Row>
-      </Container>
+      </Container> */}
     </>
   );
 };

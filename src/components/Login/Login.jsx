@@ -4,22 +4,30 @@ import { Link, NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import AppUrl from "../../api/AppUrl";
+import { useDispatch, useSelector } from "react-redux";
+import { loginSuccess, loginFailure } from "../../redux/actions/authActions";
+import { getUser } from "../../redux/actions/authActions";
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const dispatch = useDispatch();
+  const error = useSelector((state) => state.auth.error);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(AppUrl.Login, { email, password });
-      localStorage.setItem("token", response.data.authorisation.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      // localStorage.setItem("token", response.data.authorisation.token);
+      const token = response.data.authorisation.token;
+      dispatch(loginSuccess(token));
+      const user = response.data.user;
+      dispatch(getUser(user));
+      // localStorage.setItem("user", JSON.stringify(response.data.user));
       navigate("/");
     } catch (error) {
-      setError("Invalid email or password");
+      console.log(error);
     }
   };
 

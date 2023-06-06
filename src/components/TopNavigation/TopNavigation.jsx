@@ -6,6 +6,7 @@ import "../../asset/css/bootstrap.min.css";
 import RestClient from "../../api/RestClient";
 import AppUrl from "../../api/AppUrl";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const TopNavigation = () => {
   const [navBarTitle, setNavBarTitle] = useState("navTitle");
@@ -14,6 +15,7 @@ const TopNavigation = () => {
   const [navBarItem, setNavBarItem] = useState("navItem");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("");
+  const user = useSelector((state) => state.auth.user);
 
   const onScroll = () => {
     if (window.scrollY > 100) {
@@ -40,12 +42,12 @@ const TopNavigation = () => {
   const checkLoggedIn = async () => {
     // Kiểm tra trong local storage nếu có token
     let token = localStorage.getItem("token");
-    let user = localStorage.getItem("user");
+    // let user = localStorage.getItem("user");
     // console.log(token);
     if (token) {
       setIsLoggedIn(true);
-
-      setUserName(JSON.parse(user).name); // Thay thế bằng thông tin người dùng thực tế
+      // console.log(user);
+      setUserName(user.name); // Thay thế bằng thông tin người dùng thực tế
     } else {
       setIsLoggedIn(false);
       setUserName("");

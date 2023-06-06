@@ -7,13 +7,13 @@ import TopNavigation from "../components/TopNavigation/TopNavigation";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-const CourseDetailsPage = () => {
+const CourseDetailsPage = ({user}) => {
   const { id } = useParams();
   return (
     <Fragment>
       <TopNavigation />
       <PageTop pageTitle="Course Details"/>
-      <CourseDetails  id={id}  />
+      <CourseDetails  id={id} user={user} />
       <Footer />
     </Fragment>
   );

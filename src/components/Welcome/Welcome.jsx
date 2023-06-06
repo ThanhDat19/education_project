@@ -11,7 +11,7 @@ const Welcome = () => {
             <Col lg={12} md={12} sm={12}>
               <div className="section-title text-center">
                 <div className="intro-area-inner">
-                  <h6 className="sub-title double-line">WELCOME</h6>
+                  <h6 className="sub-title double-line">CHÀO MỪNG</h6>
                   <h2 className="mainTitle">
                     An exemplary <br></br>
                     learning community
