@@ -21,29 +21,31 @@ import LearnCoursePage from "../pages/LearnCoursePage";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import { Spinner } from "react-bootstrap";
+import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser } from "../redux/actions/authActions";
 
 const AppRouter = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
+  const user = useSelector((state) => state.auth.user);
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function fetchData() {
-      let token = localStorage.getItem("token");
-      let user = localStorage.getItem("user");
-      if (token) {
+      const storedUser = Cookies.get("user");
+      console.log(storedUser)
+      if (storedUser) {
+        dispatch(getUser(JSON.parse(storedUser)));
+      }
+      if (user) {
         setIsLoggedIn(true);
-
-        setUser(JSON.parse(user));
       } else {
         setIsLoggedIn(false);
-        setUser(null);
       }
     }
     fetchData();
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    setLoading(false);
   }, []);
 
   return loading ? (
@@ -65,17 +67,13 @@ const AppRouter = () => {
         <Route path="/project-details" element={<ProjectDetailPage />} exact />
         <Route
           path="/course-details/:id"
-          element={ isLoggedIn?<CourseDetailsPage user={user} /> :<CourseDetailsPage />}
+          element={user ? <CourseDetailsPage user={user} /> : <CourseDetailsPage />}
           exact
         />
         <Route
           path="/course-details/:id/learn"
           element={
-            isLoggedIn ? (
-                <LearnCoursePage user={user} />
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            user ? <LearnCoursePage user={user}/> : <Navigate to="/login" replace />
           }
           exact
         />

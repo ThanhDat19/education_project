@@ -7,6 +7,7 @@ import AppUrl from "../../api/AppUrl";
 import { useDispatch, useSelector } from "react-redux";
 import { loginSuccess, loginFailure } from "../../redux/actions/authActions";
 import { getUser } from "../../redux/actions/authActions";
+import Cookies from 'js-cookie';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const Login = () => {
       const user = response.data.user;
       dispatch(getUser(user));
       // localStorage.setItem("user", JSON.stringify(response.data.user));
+      Cookies.set('user', JSON.stringify(user), { expires: 7 });
       navigate("/");
     } catch (error) {
       console.log(error);

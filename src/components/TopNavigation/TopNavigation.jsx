@@ -7,6 +7,7 @@ import RestClient from "../../api/RestClient";
 import AppUrl from "../../api/AppUrl";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
 
 const TopNavigation = () => {
   const [navBarTitle, setNavBarTitle] = useState("navTitle");
@@ -41,16 +42,16 @@ const TopNavigation = () => {
   // Kiểm tra xem người dùng đã đăng nhập hay chưa
   const checkLoggedIn = async () => {
     // Kiểm tra trong local storage nếu có token
-    let token = localStorage.getItem("token");
+    // let token = localStorage.getItem("token");
     // let user = localStorage.getItem("user");
     // console.log(token);
-    if (token) {
+    if (user) {
       setIsLoggedIn(true);
-      // console.log(user);
+      console.log(user);
       setUserName(user.name); // Thay thế bằng thông tin người dùng thực tế
     } else {
       setIsLoggedIn(false);
-      setUserName("");
+      setUserName("...");
     }
   };
 
@@ -59,12 +60,9 @@ const TopNavigation = () => {
   }, []);
 
   const handleLogout = () => {
-    // Xử lý logic đăng xuất ở đây
-    // Ví dụ:
-    // Xóa token trong localStorage
     localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    // Sau đó cập nhật trạng thái đăng nhập
+    // localStorage.removeItem("user");
+    Cookies.remove("user");
     setIsLoggedIn(false);
     setUserName("");
   };

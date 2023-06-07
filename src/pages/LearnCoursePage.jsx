@@ -7,7 +7,7 @@ import LearnCourse from "../components/LearnCourse/LearnCourse";
 
 const LearnCoursePage = ({user}) => {
   const { id } = useParams();
-  console.log(user)
+
   return (
     <Fragment>
       <TopNavigation />

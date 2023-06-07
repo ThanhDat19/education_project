@@ -19,6 +19,7 @@ import parse from "html-react-parser";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { useSelector } from "react-redux";
 
 var amount;
 var courseSate;
@@ -28,7 +29,7 @@ const CourseDetails = (props) => {
   const [paidFor, setPaidFor] = useState(false);
   const [error, setError] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
+  const user = useSelector((state) => state.auth.user);
   const [paymentState, setPaymentState] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -51,17 +52,16 @@ const CourseDetails = (props) => {
 
   useEffect(() => {
     async function fetchData() {
-      console.log(props.user);
 
-      if (props.user) {
+      if (user) {
         setIsLoggedIn(true);
       } else {
         setIsLoggedIn(false);
       }
 
       let response;
-      if (props.user) {
-        let user_id = props.user.id;
+      if (user) {
+        let user_id = user.id;
         // console.log(user_id);
         response = await axios.post(AppUrl.CourseDetails + id, {
           user_id,
@@ -97,7 +97,7 @@ const CourseDetails = (props) => {
     event.target.playVideo();
   };
 
-  const PayPalView = props.user ? (
+  const PayPalView = user ? (
     !paymentState ? (
       <PayPalScriptProvider
         options={{

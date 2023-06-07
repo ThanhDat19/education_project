@@ -13,7 +13,7 @@ const CourseDetailsPage = ({user}) => {
     <Fragment>
       <TopNavigation />
       <PageTop pageTitle="Course Details"/>
-      <CourseDetails  id={id} user={user} />
+      <CourseDetails  id={id} user={user}/>
       <Footer />
     </Fragment>
   );
