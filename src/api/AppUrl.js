@@ -37,6 +37,7 @@ class AppUrl {
   static teacherGetCourse = this.BaseUrl + '/get-course-teacher';
   static teacherPostCourse = this.BaseUrl + '/post-course-teacher';
   static DeleteCourse = this.BaseUrl + '/delete-course-teacher';
+  static UpdateCourse = this.BaseUrl + '/update-course-teacher/';
 }
 
 export default AppUrl;

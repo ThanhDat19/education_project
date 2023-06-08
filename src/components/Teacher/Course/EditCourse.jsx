@@ -6,7 +6,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import AppUrl from "../../../api/AppUrl";
 import { format, parse } from "date-fns";
 
-
 const EditCourse = (props) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [newCourseTitle, setNewCourseTitle] = useState("");
@@ -24,22 +23,29 @@ const EditCourse = (props) => {
         const response = await axios.post(AppUrl.CourseDetails + props.id);
 
         setCourse(response.data.data);
-        if (course) {
-          setNewCourseTitle(course.title);
-          setCourseCategoryId(course.course_category_id);
-          setDescription(course.description);
-          setPrice(course.price);
-          // Chuyển đổi định dạng start_date sang ISO 8601
+        setNewCourseTitle(response.data.data.title);
+        setCourseCategoryId(response.data.data.course_category_id);
+        setDescription(response.data.data.description);
+        setPrice(response.data.data.price);
+        setCategories(response.data.categories);
+        const startDate = response.data.data.start_date;
+        if (startDate) {
           const isoStartDate = format(
-            parse(course.start_date, "yyyy-MM-dd HH:mm:ss", new Date()),
+            parse(startDate, "yyyy-MM-dd HH:mm:ss", new Date()),
             "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
           );
           setSelectedDate(new Date(isoStartDate));
         }
+
+        // Set the image preview URL
+        const imagePreviewURL =
+          "http://127.0.0.1:8000" + response.data.data.course_image;
+        setImagePreview(imagePreviewURL);
+        setImage(response.data.data.course_image);
       }
     }
     fetchData();
-  }, []);
+  }, [props.id]);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -54,6 +60,42 @@ const EditCourse = (props) => {
     // Generate a preview URL for the selected image
     const previewURL = URL.createObjectURL(selectedImage);
     setImagePreview(previewURL);
+  };
+
+  const handleUpdateCourse = async () => {
+    // Prepare the form data
+    const formData = new FormData();
+    formData.append("title", newCourseTitle);
+    formData.append("course_category_id", courseCategoryId);
+    formData.append("description", description);
+    formData.append("price", price);
+    formData.append("user_id", props.user.id);
+    formData.append("start_date", selectedDate.toDateString());
+    if (image) {
+      formData.append("image", image);
+    }
+    // In dữ liệu trong formData
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
+    try {
+      // Send the POST request to update the course
+      const response = await axios.post(
+        AppUrl.UpdateCourse + props.id,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(response.data);
+
+      // Handle the response as needed
+    } catch (error) {
+      // Handle errors
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -147,11 +189,8 @@ const EditCourse = (props) => {
               />
             </Form.Group>
 
-            <Button
-              variant="primary"
-              //   onClick={handleAddCourse}
-            >
-              Tạo khóa học
+            <Button variant="primary" onClick={handleUpdateCourse}>
+              Cập nhật khóa học
             </Button>
           </Col>
         </Row>
