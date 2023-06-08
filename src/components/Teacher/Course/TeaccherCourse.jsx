@@ -15,7 +15,7 @@ import parse from "html-react-parser";
 import ReactPaginate from "react-paginate";
 import AppUrl from "../../../api/AppUrl";
 import ReactDatePicker from "react-datepicker";
-import 'react-datepicker/dist/react-datepicker.css';
+import "react-datepicker/dist/react-datepicker.css";
 
 const TeacherCourse = ({ user }) => {
   const [allCourses, setAllCourses] = useState([]);
@@ -166,6 +166,7 @@ const TeacherCourse = ({ user }) => {
       setImagePreview(null);
       // Đóng modal
       handleAddCourseModal();
+      getCourses(1, user.id);
     } else {
       // Xử lý không thành công, hiển thị thông báo lỗi
       // console.log("Error:", response.data.message);
@@ -216,21 +217,34 @@ const TeacherCourse = ({ user }) => {
             >
               Xem chi tiết
             </Link>
-            <Button
-              variant="danger"
-              className="float-right"
-              onClick={() => deleteCourse(item.id)}
-            >
-              Xóa
-            </Button>
-            <Button
-              variant="warning"
-              className="float-right mr-2"
-              as={Link}
-              to={"/edit-course/" + item.id}
-            >
-              Sửa
-            </Button>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div>
+                <Button
+                  variant="outline-danger"
+                  size="lg"
+                  onClick={() => deleteCourse(item.id)}
+                  style={{
+                    borderRadius: "10px",
+                    fontSize: "16px",
+                    marginRight: "5px",
+                  }}
+                  className="px-5"
+                >
+                  Xóa
+                </Button>
+
+                <Button
+                  variant="outline-primary"
+                  size="lg"
+                  as={Link}
+                  to={"/edit-course/" + item.id}
+                  style={{ borderRadius: "10px", fontSize: "16px" }}
+                  className="px-5"
+                >
+                  Sửa
+                </Button>
+              </div>
+            </div>
           </Card.Body>
         </Card>
       </Col>

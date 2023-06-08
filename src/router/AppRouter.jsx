@@ -25,6 +25,7 @@ import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "../redux/actions/authActions";
 import CourseManagementPage from "../pages/Teacher/CoursePage";
+import EditCoursePage from "../pages/Teacher/EditCoursePage";
 
 const AppRouter = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -86,8 +87,20 @@ const AppRouter = () => {
         <Route
           path="/course-management"
           element={
-            user.roles ==='teacher' ? (
+            user && user.roles === "teacher" ? (
               <CourseManagementPage user={user} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+          exact
+        />
+
+        <Route
+          path="/edit-course/:id"
+          element={
+            user && user.roles === "teacher" ? (
+              <EditCoursePage user={user} />
             ) : (
               <Navigate to="/login" replace />
             )
