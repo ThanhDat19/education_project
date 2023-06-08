@@ -25,7 +25,7 @@ const HomePage = () => {
       <Services />
       <Analysis />
       <Summary />
-      <RecentProject />
+      {/* <RecentProject /> */}
       <Courses />
       <Video />
       <ClientReview />

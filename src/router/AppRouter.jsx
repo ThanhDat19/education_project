@@ -24,6 +24,7 @@ import { Spinner } from "react-bootstrap";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "../redux/actions/authActions";
+import CourseManagementPage from "../pages/Teacher/CoursePage";
 
 const AppRouter = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,7 +35,6 @@ const AppRouter = () => {
   useEffect(() => {
     async function fetchData() {
       const storedUser = Cookies.get("user");
-      console.log(storedUser)
       if (storedUser) {
         dispatch(getUser(JSON.parse(storedUser)));
       }
@@ -67,13 +67,30 @@ const AppRouter = () => {
         <Route path="/project-details" element={<ProjectDetailPage />} exact />
         <Route
           path="/course-details/:id"
-          element={user ? <CourseDetailsPage user={user} /> : <CourseDetailsPage />}
+          element={
+            user ? <CourseDetailsPage user={user} /> : <CourseDetailsPage />
+          }
           exact
         />
         <Route
           path="/course-details/:id/learn"
           element={
-            user ? <LearnCoursePage user={user}/> : <Navigate to="/login" replace />
+            user ? (
+              <LearnCoursePage user={user} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+          exact
+        />
+        <Route
+          path="/course-management"
+          element={
+            user.roles ==='teacher' ? (
+              <CourseManagementPage user={user} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
           }
           exact
         />

@@ -32,6 +32,10 @@ class AppUrl {
   //Authentication
   static Login = this.BaseUrl + '/login';
   static getUserLogin = this.BaseUrl + '/user-login';
+
+  //Teacher
+  static teacherGetCourse = this.BaseUrl + '/get-course-teacher';
+  static teacherPostCourse = this.BaseUrl + '/post-course-teacher';
 }
 
 export default AppUrl;

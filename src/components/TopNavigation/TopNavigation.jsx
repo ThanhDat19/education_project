@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Navbar, Nav, NavDropdown } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import "../../asset/css/custom.css";
 import "../../asset/css/bootstrap.min.css";
 import RestClient from "../../api/RestClient";
@@ -88,7 +88,7 @@ const TopNavigation = () => {
             <Nav>
               <Nav.Link>
                 <NavLink
-                  activeClassName="menu_active"
+                  activeclassname="menu_active"
                   className={navBarItem}
                   to="/"
                 >
@@ -97,7 +97,7 @@ const TopNavigation = () => {
               </Nav.Link>
               <Nav.Link>
                 <NavLink
-                  activeClassName="menu_active"
+                  activeclassname="menu_active"
                   className={navBarItem}
                   to="/about"
                 >
@@ -106,7 +106,7 @@ const TopNavigation = () => {
               </Nav.Link>
               <Nav.Link>
                 <NavLink
-                  activeClassName="menu_active"
+                  activeclassname="menu_active"
                   className={navBarItem}
                   to="/course"
                 >
@@ -115,7 +115,7 @@ const TopNavigation = () => {
               </Nav.Link>
               <Nav.Link>
                 <NavLink
-                  activeClassName="menu_active"
+                  activeclassname="menu_active"
                   className={navBarItem}
                   to="/contact"
                 >
@@ -126,7 +126,7 @@ const TopNavigation = () => {
                 <>
                   <Nav.Link>
                     <NavLink
-                      activeClassName="menu_active"
+                      activeclassname="menu_active"
                       className={navBarItem}
                       to="/"
                       onClick={handleLogout}
@@ -139,7 +139,7 @@ const TopNavigation = () => {
                     title="QUẢN LÝ"
                     id="basic-nav-dropdown"
                   >
-                    <NavDropdown.Item className={navBarItem} href="#action/3.1">
+                    <NavDropdown.Item className={navBarItem} as= {Link} to='/course-management'>
                       Khóa học của tôi
                     </NavDropdown.Item>
                     <NavDropdown.Item className={navBarItem} href="#action/3.2">
@@ -164,7 +164,7 @@ const TopNavigation = () => {
               ) : (
                 <Nav.Link>
                   <NavLink
-                    activeClassName="menu_active"
+                    activeclassname="menu_active"
                     className={navBarItem}
                     to="/login"
                   >
