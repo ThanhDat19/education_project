@@ -27,6 +27,7 @@ class AppUrl {
   static ChartData = this.BaseUrl + '/chart-data';
   // Test url
   static TestData = this.BaseUrl + '/tests/';
+  static GetTestResult = this.BaseUrl + '/tests-result/';
   // Payment url
   static Payment = this.BaseUrl + '/payment/';
   //Authentication
