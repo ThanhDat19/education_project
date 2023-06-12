@@ -7,8 +7,7 @@ const Quiz = ({ tests, user }) => {
   const [answers, setAnswers] = useState([]);
   const [testResult, setTestResult] = useState(null);
 
-  useEffect(() => {
-    // console.log(AppUrl.GetTestResult + user.id + "/" + tests.id);
+  const fetchTestResult = (tests) => {
     if (tests) {
       axios
         .post(AppUrl.GetTestResult + user.id + "/" + tests.id)
@@ -22,6 +21,10 @@ const Quiz = ({ tests, user }) => {
           console.log(error);
         });
     }
+  };
+  useEffect(() => {
+    // console.log(AppUrl.GetTestResult + user.id + "/" + tests.id);
+    fetchTestResult(tests);
   }, [tests]);
 
   const handleAnswerChange = (
@@ -119,6 +122,7 @@ const Quiz = ({ tests, user }) => {
       .post(AppUrl.TestData + `${tests.id}/${user.id}`, test)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
+        fetchTestResult(tests);
       })
       .catch(function (error) {
         console.log(error);

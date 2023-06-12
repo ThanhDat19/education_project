@@ -56,7 +56,7 @@ const TeacherCourse = ({ user }) => {
       const response = await axios.get(AppUrl.teacherGetCourse, {
         params: { page, user_id },
       });
-      console.log(response.data);
+      console.log(JSON.parse(response.data));
       if (response.data.courses.data) {
         setAllCourses(response.data.courses.data);
         setTotalCourse(response.data.courses.total);
@@ -192,11 +192,11 @@ const TeacherCourse = ({ user }) => {
 
   const renderCourses = () => {
     if (loading) {
-      return <p>Loading...</p>;
+      return <p>Đang tải...</p>;
     }
 
     if (filteredCourses.length === 0) {
-      return <p>No matching courses found.</p>;
+      return <p>Không tìm thấy khóa học.</p>;
     }
 
     return filteredCourses.map((item) => (
@@ -254,7 +254,7 @@ const TeacherCourse = ({ user }) => {
   return (
     <Fragment>
       <Container style={{ minHeight: "100vh" }}>
-        <h1 className="serviceMainTitle text-center">MY COURSES</h1>
+        <h1 className="serviceMainTitle text-center">QUẢN LÝ KHÓA HỌC</h1>
         <div className="bottom"></div>
         <Row>
           <Col md={3}>
@@ -266,7 +266,7 @@ const TeacherCourse = ({ user }) => {
                   marginBottom: filteredCourses.length === 0 ? "0" : "10px",
                 }}
                 type="text"
-                placeholder="Search..."
+                placeholder="Tìm kiếm..."
                 onChange={(e) => setSearchTitle(e.target.value)}
               />
               <select
@@ -274,7 +274,7 @@ const TeacherCourse = ({ user }) => {
                 value={selectedCategory}
                 onChange={handleCategoryChange}
               >
-                <option value="">All Categories</option>
+                <option value="">Tất cả</option>
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.name}
@@ -285,7 +285,7 @@ const TeacherCourse = ({ user }) => {
               <input
                 style={{ width: "100%", height: "30px" }}
                 type="number"
-                placeholder="Min Price"
+                placeholder="Giá thấp nhất"
                 name="min"
                 value={selectedPriceRange.min}
                 onChange={handlePriceRangeChange}
@@ -293,7 +293,7 @@ const TeacherCourse = ({ user }) => {
               <input
                 style={{ width: "100%", height: "30px", marginTop: "10px" }}
                 type="number"
-                placeholder="Max Price"
+                placeholder="Giá cao nhất"
                 name="max"
                 value={selectedPriceRange.max}
                 onChange={handlePriceRangeChange}
@@ -399,11 +399,11 @@ const TeacherCourse = ({ user }) => {
             <Row>{renderCourses()}</Row>
             <ReactPaginate
               breakLabel="..."
-              nextLabel="next"
+              nextLabel="sau"
               onPageChange={handlePageClick}
               pageRangeDisplayed={5}
               pageCount={totalPages}
-              previousLabel="previous"
+              previousLabel="trước"
               pageClassName="page-item"
               pageLinkClassName="page-link"
               previousClassName="page-item"

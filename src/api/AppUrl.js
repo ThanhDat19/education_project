@@ -35,10 +35,20 @@ class AppUrl {
   static getUserLogin = this.BaseUrl + '/user-login';
 
   //Teacher
+  //Course
   static teacherGetCourse = this.BaseUrl + '/get-course-teacher';
   static teacherPostCourse = this.BaseUrl + '/post-course-teacher';
   static DeleteCourse = this.BaseUrl + '/delete-course-teacher';
   static UpdateCourse = this.BaseUrl + '/update-course-teacher/';
+
+  //Test
+  static teacherGetTests = this.BaseUrl + '/get-tests-teacher/';
+  static teacherPostTests = this.BaseUrl + '/post-tests-teacher/';
+  static DeleteTest = this.BaseUrl + '/delete-tests-teacher/';
+  static UpdateTest = this.BaseUrl + '/update-tests-teacher/';
+
+  //Questions
+  static getQuestions = this.BaseUrl + '/get-questions-teacher/';
 }
 
 export default AppUrl;

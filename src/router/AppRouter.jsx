@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "../redux/actions/authActions";
 import CourseManagementPage from "../pages/Teacher/CoursePage";
 import EditCoursePage from "../pages/Teacher/EditCoursePage";
+import TestManagementPage from "../pages/Teacher/TestPage";
 
 const AppRouter = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -101,6 +102,18 @@ const AppRouter = () => {
           element={
             user && user.roles === "teacher" ? (
               <EditCoursePage user={user} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+          exact
+        />
+
+        <Route
+          path="/tests-management"
+          element={
+            user && user.roles === "teacher" ? (
+              <TestManagementPage user={user} />
             ) : (
               <Navigate to="/login" replace />
             )

@@ -142,7 +142,7 @@ const TopNavigation = () => {
                     <NavDropdown.Item className={navBarItem} as= {Link} to='/course-management'>
                       Khóa học của tôi
                     </NavDropdown.Item>
-                    <NavDropdown.Item className={navBarItem} href="#action/3.2">
+                    <NavDropdown.Item className={navBarItem} as= {Link} to='/tests-management'>
                       Bài kiểm tra
                     </NavDropdown.Item>
                     <NavDropdown.Item className={navBarItem} href="#action/3.3">
