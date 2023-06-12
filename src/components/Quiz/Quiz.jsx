@@ -5,7 +5,7 @@ import axios from "axios";
 
 const Quiz = ({ tests, user }) => {
   const [answers, setAnswers] = useState([]);
-  const [testResult, setTestResult] = useState([]);
+  const [testResult, setTestResult] = useState(null);
 
   useEffect(() => {
     // console.log(AppUrl.GetTestResult + user.id + "/" + tests.id);
