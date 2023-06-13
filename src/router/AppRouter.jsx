@@ -27,6 +27,7 @@ import { getUser } from "../redux/actions/authActions";
 import CourseManagementPage from "../pages/Teacher/CoursePage";
 import EditCoursePage from "../pages/Teacher/EditCoursePage";
 import TestManagementPage from "../pages/Teacher/TestPage";
+import QuestionManagementPage from "../pages/Teacher/Questions";
 
 const AppRouter = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -114,6 +115,18 @@ const AppRouter = () => {
           element={
             user && user.roles === "teacher" ? (
               <TestManagementPage user={user} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+          exact
+        />
+
+        <Route
+          path="/question-management"
+          element={
+            user && user.roles === "teacher" ? (
+              <QuestionManagementPage user={user} />
             ) : (
               <Navigate to="/login" replace />
             )

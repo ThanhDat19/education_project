@@ -34,6 +34,7 @@ const TeacherTest = ({ user }) => {
   const [questionTypes, setQuestionTypes] = useState([]);
   const [totalQuestionPages, setTotalQuestionPages] = useState(0);
   const [selectedQuestionTypes, setSelectedQuestionTypes] = useState([]);
+  const [currentQuestionPage, setCurrentQuestionPage] = useState(1);
 
   useEffect(() => {
     fetchTests(1);
@@ -142,10 +143,10 @@ const TeacherTest = ({ user }) => {
 
     return allQuestions.map((question, index) => {
       const questionType = questionTypes.find(
-        (type) => type.id === question.question_type_id	
+        (type) => type.id === question.question_type_id
       );
-        // console.log(questionType.id)
-        // console.log(, questionType.id, selectedQuestionTypes)
+      // console.log(questionType.id)
+      // console.log(, questionType.id, selectedQuestionTypes)
       if (!selectedQuestionTypes.includes(`${questionType.id}`)) {
         return null;
       }
@@ -172,24 +173,18 @@ const TeacherTest = ({ user }) => {
     });
   };
   const handleAddQuestions = () => {
-    // TODO: Add selected questions to the test's questions array
-    // You can store the questions array in a separate state variable
-    // and update it using the setQuestions function.
-    // Example: setQuestions([...questions, ...selectedQuestions]);
-
-    // Clear the selected questions
     setSelectedQuestions([]);
   };
 
   const handleUpdateTest = async () => {
-    console.log(selectedQuestions)
+    console.log(selectedQuestions);
     try {
       const response = await axios.put(AppUrl.UpdateTest + editTestId, {
         title: editTestTitle,
         description: editTestDescription,
-        selectedQuestions: selectedQuestions
+        selectedQuestions: selectedQuestions,
       });
-      console.log(response.data)
+      console.log(response.data);
       if (response.status === 200) {
         fetchTests(1);
         setShowEditTestModal(false);
@@ -226,6 +221,9 @@ const TeacherTest = ({ user }) => {
   };
   const handlePageClick = (event) => {
     fetchTests(event.selected + 1);
+  };
+  const handleQuestionPageClick = (event) => {
+    fetchQuestion(event.selected + 1);
   };
   const renderTests = () => {
     if (filteredTests.length === 0) {
@@ -428,6 +426,26 @@ const TeacherTest = ({ user }) => {
               </tr>
             </thead>
             <tbody>{renderQuestions()}</tbody>
+            <ReactPaginate
+              breakLabel="..."
+              nextLabel="sau"
+              onPageChange={handleQuestionPageClick}
+              pageRangeDisplayed={5}
+              pageCount={totalQuestionPages}
+              previousLabel="trước"
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              breakClassName={"page-item"}
+              breakLinkClassName="page-link"
+              marginPagesDisplayed={2}
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+              initialPage={currentQuestionPage - 1}
+            />
           </Table>
         </Modal.Body>
         <Modal.Footer>

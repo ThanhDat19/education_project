@@ -42,7 +42,9 @@ const TeacherCourse = ({ user }) => {
   // Add more state variables for other course fields
 
   useEffect(() => {
-    getCourses(1, user.id);
+    if (user) {
+      getCourses(1, user.id);
+    }
   }, []);
 
   useEffect(() => {
@@ -52,11 +54,11 @@ const TeacherCourse = ({ user }) => {
   const getCourses = async (page, user_id) => {
     // console.log(user_id);
     try {
-      setCurrentPage(page);
       const response = await axios.get(AppUrl.teacherGetCourse, {
         params: { page, user_id },
       });
-      console.log(JSON.parse(response.data));
+      setCurrentPage(page);
+      // console.log(JSON.parse(response.data));
       if (response.data.courses.data) {
         setAllCourses(response.data.courses.data);
         setTotalCourse(response.data.courses.total);

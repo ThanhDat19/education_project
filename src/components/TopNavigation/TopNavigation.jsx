@@ -8,6 +8,8 @@ import AppUrl from "../../api/AppUrl";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import { logout  } from "../../redux/actions/authActions";
+import { useDispatch } from "react-redux";
 
 const TopNavigation = () => {
   const [navBarTitle, setNavBarTitle] = useState("navTitle");
@@ -17,6 +19,8 @@ const TopNavigation = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("");
   const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+  
 
   const onScroll = () => {
     if (window.scrollY > 100) {
@@ -41,14 +45,10 @@ const TopNavigation = () => {
 
   // Kiểm tra xem người dùng đã đăng nhập hay chưa
   const checkLoggedIn = async () => {
-    // Kiểm tra trong local storage nếu có token
-    // let token = localStorage.getItem("token");
-    // let user = localStorage.getItem("user");
-    // console.log(token);
     if (user) {
       setIsLoggedIn(true);
-      console.log(user);
-      setUserName(user.name); // Thay thế bằng thông tin người dùng thực tế
+      // console.log(user);
+      setUserName(user.name);
     } else {
       setIsLoggedIn(false);
       setUserName("...");
@@ -60,8 +60,8 @@ const TopNavigation = () => {
   }, []);
 
   const handleLogout = () => {
+    dispatch(logout());
     localStorage.removeItem("token");
-    // localStorage.removeItem("user");
     Cookies.remove("user");
     setIsLoggedIn(false);
     setUserName("");
@@ -145,7 +145,7 @@ const TopNavigation = () => {
                     <NavDropdown.Item className={navBarItem} as= {Link} to='/tests-management'>
                       Bài kiểm tra
                     </NavDropdown.Item>
-                    <NavDropdown.Item className={navBarItem} href="#action/3.3">
+                    <NavDropdown.Item className={navBarItem} as= {Link} to='/question-management'>
                       Câu hỏi và Lựa chọn
                     </NavDropdown.Item>
                     <NavDropdown.Divider />
