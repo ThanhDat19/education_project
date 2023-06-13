@@ -34,7 +34,11 @@ const TeacherQuestion = ({ user }) => {
     options: [{ content: "", isCorrect: false }],
   });
   const [showAddQuestionModal, setShowAddQuestionModal] = useState(false);
+  const [showViewQuestionModal, setShowViewQuestionModal] = useState(false);
+  const [showEditQuestionModal, setShowEditQuestionModal] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
+  const [selectedQuestionId, setSelectedQuestionId] = useState(null);
+  const [question, setQuestion] = useState([]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -91,7 +95,7 @@ const TeacherQuestion = ({ user }) => {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(response.data)
+      console.log(response.data);
       if (response.data) {
         // Đặt lại giá trị của newQuestion về rỗng
         setNewQuestion({
@@ -121,6 +125,7 @@ const TeacherQuestion = ({ user }) => {
     }
   };
 
+  //Show Add
   const handleShowAddQuestionModal = () => {
     setShowAddQuestionModal(true);
   };
@@ -129,6 +134,96 @@ const TeacherQuestion = ({ user }) => {
     setShowAddQuestionModal(false);
   };
 
+  //Show View
+  const handleShowViewQuestionModal = (questionId) => {
+    setSelectedQuestionId(questionId);
+    setShowViewQuestionModal(true);
+  };
+
+  const handleCloseViewQuestionModal = () => {
+    setShowViewQuestionModal(false);
+  };
+  //Show Edit
+  const handleShowEditQuestionModal = (questionId) => {
+    setSelectedQuestionId(questionId);
+    setShowEditQuestionModal(true);
+  };
+
+  const handleCloseEditQuestionModal = () => {
+    setShowEditQuestionModal(false);
+  };
+  //Delete
+  const handleShowDeleteQuestion = async (questionId) => {
+    try {
+      await axios.delete(AppUrl.deleteQuestion + questionId);
+      // Xóa khóa học thành công, cập nhật danh sách câu hỏi
+      getQuestions(1);
+    } catch (error) {
+      console.error("Error deleting question:", error);
+    }
+  };
+  //Handle Edit
+  const handleEditQuestion = async () => {
+    try {
+      const formData = new FormData();
+      const questionText =
+        newQuestion.question !== "" ? newQuestion.question : question.question;
+      const questionTypeId =
+        newQuestion.question_type_id !== ""
+          ? newQuestion.question_type_id
+          : question.question_type.id;
+      const score =
+        newQuestion.score !== 0 ? newQuestion.score : question.score;
+      const multiAnswer =
+        newQuestion.multi_answer !== false
+          ? newQuestion.multi_answer
+          : question.multi_answer;
+      const image = newQuestion.image;
+      const options =
+        newQuestion.options.length > 0 ? newQuestion.options : question.options;
+
+      console.log(newQuestion.options.length);
+      formData.append("question", questionText);
+      formData.append("question_type_id", questionTypeId);
+      formData.append("score", score);
+      formData.append("multi_answer", multiAnswer);
+      formData.append("image", image);
+      formData.append("options", JSON.stringify(options));
+      formData.append("options_length", newQuestion.options.length);
+      const response = await axios.post(
+        AppUrl.updateQuestion + question.id,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (response.data) {
+        // Đặt lại giá trị của newQuestion về rỗng
+        setNewQuestion({
+          question_type_id: "",
+          question: "",
+          score: 0,
+          multi_answer: false,
+          image: null,
+          options: [{ content: "", isCorrect: false }],
+        });
+        // Cập nhật danh sách câu hỏi bằng cách gọi lại API hoặc thực hiện các bước khác cần thiết để cập nhật danh sách câu hỏi
+        handleCloseEditQuestionModal();
+        // Hiển thị thông báo thành công
+        alert("Chỉnh sửa câu hỏi thành công!");
+      } else {
+        // Hiển thị thông báo lỗi nếu chỉnh sửa câu hỏi không thành công
+        alert("Chỉnh sửa câu hỏi không thành công. Vui lòng thử lại sau.");
+      }
+    } catch (error) {
+      console.error("Error edit question:", error);
+      alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+    }
+  };
+
+  //
   const filterQuestions = () => {
     const filtered = questions.filter((value) => {
       const isMatchedQuestion =
@@ -173,6 +268,28 @@ const TeacherQuestion = ({ user }) => {
       }
     };
   }, [imagePreview]);
+
+  useEffect(() => {
+    if (selectedQuestionId) {
+      // Gọi API để lấy dữ liệu câu hỏi dựa trên selectedQuestionId
+      // Sử dụng axios hoặc fetch để gửi yêu cầu API
+
+      axios
+        .get(AppUrl.getQuestionDetail + selectedQuestionId)
+        .then((response) => {
+          // Xử lý dữ liệu câu hỏi từ response.data
+          // Cập nhật state hoặc biến để hiển thị dữ liệu trong Modal
+          console.log(response.data);
+          if (response.data.question) {
+            setQuestion(response.data.question);
+          }
+        })
+        .catch((error) => {
+          // Xử lý lỗi khi gọi API
+          console.error(error);
+        });
+    }
+  }, [selectedQuestionId]);
 
   //Option
 
@@ -239,6 +356,156 @@ const TeacherQuestion = ({ user }) => {
       return { ...prevState, options };
     });
   };
+  const questionEditView = question.question && (
+    <Modal.Body>
+      <Form.Group controlId="formQuestionTypes">
+        <Form.Label>Loại câu hỏi:</Form.Label>
+        <Form.Control
+          as="select"
+          value={newQuestion.question_type_id || question.question_type.id}
+          onChange={(e) =>
+            setNewQuestion({
+              ...newQuestion,
+              question_type_id: e.target.value,
+            })
+          }
+        >
+          <option value="">Chọn loại câu hỏi</option>
+          {questionTypes.map((type) => (
+            <option key={type.id} value={type.id}>
+              {type.name}
+            </option>
+          ))}
+        </Form.Control>
+      </Form.Group>
+      <Form.Group controlId="formQuestion">
+        <Form.Label>Câu hỏi:</Form.Label>
+        <Form.Control
+          type="text"
+          value={newQuestion.question || question.question}
+          onChange={(e) =>
+            setNewQuestion({
+              ...newQuestion,
+              question: e.target.value,
+            })
+          }
+        />
+      </Form.Group>
+      <Form.Group controlId="formScore">
+        <Form.Label>Điểm:</Form.Label>
+        <Form.Control
+          type="number"
+          value={newQuestion.score || question.score}
+          onChange={(e) =>
+            setNewQuestion({ ...newQuestion, score: e.target.value })
+          }
+        />
+      </Form.Group>
+      <Form.Group>
+        <Form.Label>Hình ảnh</Form.Label>
+        <Form.Control
+          type="file"
+          name="image_validate"
+          id="upload"
+          onChange={handleImageChange}
+        />
+        {(imagePreview || question.question_image) && (
+          <img
+            src={
+              imagePreview || "http://127.0.0.1:8000" + question.question_image
+            }
+            alt="Preview"
+            style={{ marginTop: "10px", maxWidth: "400px" }}
+          />
+        )}
+      </Form.Group>
+      <Form.Group controlId="formMultiAnswer">
+        <Form.Check
+          type="checkbox"
+          label="Multi Answer"
+          checked={newQuestion.multi_answer}
+          onChange={(e) => multiAnswerChange(e.target.checked)}
+        />
+      </Form.Group>
+      <Form.Group>
+        <Form.Label>Lựa chọn:</Form.Label>
+        {newQuestion.options.map((option, index) => (
+          <div key={index}>
+            <Form.Control
+              type="text"
+              value={option.content}
+              onChange={(e) =>
+                handleOptionChange(index, "content", e.target.value)
+              }
+            />
+            <Form.Check
+              type={newQuestion.multi_answer ? "checkbox" : "radio"}
+              label="Đúng"
+              checked={option.isCorrect}
+              onChange={(e) =>
+                handleCorrectAnswerChange(index, e.target.checked)
+              }
+              disabled={!newQuestion.multi_answer && option.isCorrect}
+            />
+            <Button
+              variant="outline-danger"
+              className="mb-2"
+              onClick={() => handleRemoveOption(index)}
+            >
+              Xóa
+            </Button>
+          </div>
+        ))}
+        <Button variant="primary" onClick={handleAddOption}>
+          <span>+</span> Thêm lựa chọn
+        </Button>
+      </Form.Group>
+    </Modal.Body>
+  );
+
+  const questionView = question.question && (
+    <Container>
+      <Row>
+        <Col lg={4} md={6} sm={12}>
+          {question.question_image && (
+            <img
+              style={{ width: "100%" }}
+              src={"http://127.0.0.1:8000" + question.question_image}
+              alt="Question Image"
+            />
+          )}
+          <h6 className="mt-1">Câu hỏi:</h6>
+          <p>{question.question}</p>
+          <h6 className="mt-1">Điểm số:</h6>
+          <p>{question.score}</p>
+          <h6 className="mt-1">Nhiều đáp án đúng:</h6>
+          <p>{question.multi_answer ? "Có" : "Không"}</p>
+          <h6 className="mt-1">Loại câu hỏi: {question.question_type.name}</h6>
+        </Col>
+        <Col lg={8} md={6} sm={12}>
+          <h6 className="mt-1">Các lựa chọn:</h6>
+          <table className="table">
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>Nội dung</th>
+                <th>Kết quả</th>
+              </tr>
+            </thead>
+            <tbody>
+              {question.options.map((option, index) => (
+                <tr key={option.id}>
+                  <td>{index + 1}</td>
+                  <td>{option.option_text}</td>
+                  <td>{option.correct ? "Đúng" : "Sai"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Col>
+      </Row>
+    </Container>
+  );
   const renderQuestions = () => {
     if (loading) {
       return <p>Loading...</p>;
@@ -252,11 +519,11 @@ const TeacherQuestion = ({ user }) => {
       <table className="table">
         <thead>
           <tr>
-            <th>Question</th>
-            <th>Question Type</th>
-            <th>Score</th>
-            <th>Multi Answer</th>
-            <th>Actions</th>
+            <th>Nội dung</th>
+            <th>Lĩnh vực</th>
+            <th>Điểm</th>
+            <th>Nhiều đáp án đúng</th>
+            <th>Chức năng</th>
           </tr>
         </thead>
         <tbody>
@@ -267,9 +534,27 @@ const TeacherQuestion = ({ user }) => {
               <td>{item.score}</td>
               <td>{item.multi_answer}</td>
               <td>
-                <Link to={"/question-details/" + item.id}>View Details</Link>
-                <Link to={"/question-edit/" + item.id}>Edit</Link>
-                <Link to={"/question-delete/" + item.id}>Delete</Link>
+                <Button
+                  variant="outline-info"
+                  className="mx-1"
+                  onClick={() => handleShowViewQuestionModal(item.id)}
+                >
+                  Xem chi tiết
+                </Button>
+
+                <Button
+                  variant="outline-dark"
+                  className="mx-2"
+                  onClick={() => handleShowEditQuestionModal(item.id)}
+                >
+                  Chỉnh Sửa
+                </Button>
+                <Button
+                  variant="outline-danger"
+                  onClick={() => handleShowDeleteQuestion(item.id)}
+                >
+                  Xóa
+                </Button>
               </td>
             </tr>
           ))}
@@ -281,7 +566,7 @@ const TeacherQuestion = ({ user }) => {
   return (
     <Fragment>
       <Container style={{ minHeight: "100vh" }}>
-        <h1 className="serviceMainTitle text-center">MY QUESTIONS</h1>
+        <h1 className="serviceMainTitle text-center">QUẢN LÝ CÂU HỎI</h1>
         <div className="bottom"></div>
         <Row>
           <Col md={3}>
@@ -293,7 +578,7 @@ const TeacherQuestion = ({ user }) => {
                   marginBottom: filteredQuestions.length === 0 ? "0" : "10px",
                 }}
                 type="text"
-                placeholder="Search..."
+                placeholder="Tìm kiếm..."
                 onChange={(e) => setSearchQuestion(e.target.value)}
               />
               <select
@@ -301,7 +586,7 @@ const TeacherQuestion = ({ user }) => {
                 value={selectedQuestionType}
                 onChange={handleQuestionTypeChange}
               >
-                <option value="">All Question Types</option>
+                <option value="">Tất cả</option>
                 {questionTypes.map((type) => (
                   <option value={type.id} key={type.id}>
                     {type.name}
@@ -309,7 +594,7 @@ const TeacherQuestion = ({ user }) => {
                 ))}
               </select>
             </div>
-
+            {/* Add      */}
             <Modal
               show={showAddQuestionModal}
               onHide={handleCloseAddQuestionModal}
@@ -433,7 +718,49 @@ const TeacherQuestion = ({ user }) => {
                 </Button>
               </Modal.Footer>
             </Modal>
-
+            {/* View */}
+            <Modal
+              show={showViewQuestionModal}
+              onHide={handleCloseViewQuestionModal}
+              size="lg"
+              style={{ maxWidth: "2000px", width: "100%" }}
+            >
+              <Modal.Header closeButton>
+                <Modal.Title>Chi tiết câu hỏi</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>{questionView}</Modal.Body>
+              <Modal.Footer>
+                <Button
+                  variant="secondary"
+                  onClick={handleCloseViewQuestionModal}
+                >
+                  Đóng
+                </Button>
+              </Modal.Footer>
+            </Modal>
+            {/* Edit      */}
+            <Modal
+              show={showEditQuestionModal}
+              onHide={handleCloseEditQuestionModal}
+              size="lg"
+              style={{ maxWidth: "2000px", width: "100%" }}
+            >
+              <Modal.Header closeButton>
+                <Modal.Title>Chỉnh Sửa Câu Hỏi</Modal.Title>
+              </Modal.Header>
+              {questionEditView}
+              <Modal.Footer>
+                <Button
+                  variant="secondary"
+                  onClick={handleCloseAddQuestionModal}
+                >
+                  Đóng
+                </Button>
+                <Button variant="primary" onClick={handleEditQuestion}>
+                  Xác nhận
+                </Button>
+              </Modal.Footer>
+            </Modal>
             <Button onClick={handleShowAddQuestionModal}>
               Thêm câu hỏi mới
             </Button>
@@ -442,11 +769,11 @@ const TeacherQuestion = ({ user }) => {
             <Row>{renderQuestions()}</Row>
             <ReactPaginate
               breakLabel="..."
-              nextLabel="next"
+              nextLabel="sau"
               onPageChange={handlePageClick}
               pageRangeDisplayed={5}
               pageCount={totalPages}
-              previousLabel="previous"
+              previousLabel="trước"
               pageClassName="page-item"
               pageLinkClassName="page-link"
               previousClassName="page-item"
