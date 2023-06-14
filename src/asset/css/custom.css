@@ -649,3 +649,8 @@ a.twitter {
 .nav-tabs {
   border-bottom: none !important;
 }
+
+.video-player {
+  width: 100% !important;
+  height: 498px !important;
+}

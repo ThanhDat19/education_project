@@ -156,7 +156,7 @@ const TeacherQuestion = ({ user }) => {
   const handleShowDeleteQuestion = async (questionId) => {
     try {
       await axios.delete(AppUrl.deleteQuestion + questionId);
-      // Xóa khóa học thành công, cập nhật danh sách câu hỏi
+      // Xóa câu hỏi thành công, cập nhật danh sách câu hỏi
       getQuestions(1);
     } catch (error) {
       console.error("Error deleting question:", error);

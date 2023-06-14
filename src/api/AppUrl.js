@@ -53,6 +53,10 @@ class AppUrl {
   static getQuestionDetail = this.BaseUrl + '/get-question-detail/';
   static updateQuestion = this.BaseUrl + '/update-questions-teacher/';
   static deleteQuestion = this.BaseUrl + '/delete-questions-teacher/';
+
+  //Lesson student 
+  static getLessonOfStudent = this.BaseUrl + '/get-lessons-student/'
+  static updateLessonOfStudent = this.BaseUrl + '/update-lessons-student/'
 }
 
 export default AppUrl;
