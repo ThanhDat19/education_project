@@ -1,41 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, ListGroup, Image, InputGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faReply, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import AppUrl from "../../api/AppUrl";
 
-const Comment = () => {
+const Comment = ({ user, lesson }) => {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editingComment, setEditingComment] = useState("");
 
   useEffect(() => {
-    // Thêm các bình luận ảo vào mảng comments
-    const dummyComments = [
-      {
-        id: 1,
-        author: "John Doe",
-        content: "This is a great post!",
-        timestamp: "2023-05-30T10:00:00Z",
-        avatar: "https://example.com/avatar1.jpg",
-      },
-      {
-        id: 2,
-        author: "Jane Smith",
-        content: "Thanks for sharing.",
-        timestamp: "2023-05-30T11:00:00Z",
-        avatar: "https://example.com/avatar2.jpg",
-      },
-      {
-        id: 3,
-        author: "David Johnson",
-        content: "I found this very helpful.",
-        timestamp: "2023-05-30T12:00:00Z",
-        avatar: "https://example.com/avatar3.jpg",
-      },
-    ];
-    setComments(dummyComments);
-  }, []);
+    // Fetch comments from Laravel backend API
+    // console.log(lesson);
+    axios
+      .get(AppUrl.getComments + user.id, {
+        params: { lesson },
+      })
+      .then((response) => {
+        setComments(response.data.comments);
+        // console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [lesson]);
 
   const handleInputChange = (event) => {
     setComment(event.target.value);
@@ -46,26 +36,35 @@ const Comment = () => {
 
     if (comment.trim() !== "") {
       const newComment = {
-        id: Date.now(),
-        author: "Anonymous",
+        author: user.id,
         content: comment,
-        timestamp: new Date().toISOString(),
-        avatar: "https://example.com/avatar-anonymous.jpg",
+        lesson: lesson,
       };
 
-      setComments([...comments, newComment]);
-      setComment("");
+      // Send comment to Laravel backend API
+      axios
+        .post(AppUrl.postComments + user.id, newComment)
+        .then((response) => {
+          // console.log(response.data);
+          setComments([...comments, response.data.comments]);
+          setComment("");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   };
 
-  const handleReply = (commentId) => {
-    // Xử lý trả lời bình luận
-    console.log(`Reply to comment ${commentId}`);
-  };
-
   const handleDelete = (commentId) => {
-    // Xử lý xóa bình luận
-    setComments(comments.filter((comment) => comment.id !== commentId));
+    // Delete comment using the Laravel backend API
+    axios
+      .delete(AppUrl.deleteComments + user.id + "/" + commentId)
+      .then(() => {
+        setComments(comments.filter((comment) => comment.id !== commentId));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const handleEdit = (commentId, commentContent) => {
@@ -79,19 +78,31 @@ const Comment = () => {
   };
 
   const handleSaveEdit = (commentId) => {
-    const updatedComments = comments.map((comment) => {
-      if (comment.id === commentId) {
-        return {
-          ...comment,
-          content: editingComment,
-        };
-      }
-      return comment;
-    });
+    const updatedComment = {
+      content: editingComment,
+    };
 
-    setComments(updatedComments);
-    setEditingCommentId(null);
-    setEditingComment("");
+    // Update comment using the Laravel backend API
+    axios
+      .put(AppUrl.putComments + user.id + "/" + commentId, updatedComment)
+      .then((response) => {
+        const updatedComments = comments.map((comment) => {
+          if (comment.id === commentId) {
+            return {
+              ...comment,
+              comment_body: response.data.comment.comment_body,
+            };
+          }
+          return comment;
+        });
+
+        setComments(updatedComments);
+        setEditingCommentId(null);
+        setEditingComment("");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const formatTimestamp = (timestamp) => {
@@ -100,114 +111,107 @@ const Comment = () => {
     const diffInMinutes = Math.floor((now - commentTimestamp) / (1000 * 60));
 
     if (diffInMinutes < 1) {
-      return "Just now";
+      return "Vừa mới";
     } else if (diffInMinutes < 60) {
-      return `${diffInMinutes} minutes ago`;
+      return `${diffInMinutes} phút trước`;
     } else if (diffInMinutes < 1440) {
       const diffInHours = Math.floor(diffInMinutes / 60);
-      return `${diffInHours} hours ago`;
+      return `${diffInHours} giờ trước`;
     } else {
       const diffInDays = Math.floor(diffInMinutes / 1440);
-      return `${diffInDays} days ago`;
+      return `${diffInDays} ngày trước`;
     }
   };
 
+  const commentView = comments
+    ? comments.map((comment) => (
+        <ListGroup.Item key={comment.id}>
+          <div className="d-flex align-items-start">
+            {/* <Image
+              src={comment.avatar}
+              roundedCircle
+              className="mr-3"
+              width={50}
+              height={50}
+              alt="Avatar"
+            /> */}
+            <div>
+              <div className="mb-2">
+                <strong>{comment.user.name}</strong>{" "}
+                {formatTimestamp(comment.created_at)}
+              </div>
+              {editingCommentId === comment.id ? (
+                <Form.Group >
+                  <Form.Control
+                    as="textarea"
+                    value={editingComment}
+                    onChange={(event) => setEditingComment(event.target.value)}
+                  />
+                  <div className="d-flex justify-content-end">
+                    <Button
+                      className="mx-1"
+                      variant="outline-secondary"
+                      size="sm"
+                      onClick={handleCancelEdit}
+                    >
+                      Hủy
+                    </Button>
+                    <Button
+                      className="mx-1"
+                      variant="outline-primary"
+                      size="sm"
+                      onClick={() => handleSaveEdit(comment.id)}
+                    >
+                      Lưu
+                    </Button>
+                  </div>
+                </Form.Group>
+              ) : (
+                <>
+                  <div>{comment.comment_body}</div>
+                </>
+              )}
+            </div>
+          </div>
+          <div className="comment-actions mt-2">
+            <Button
+              className="mx-1"
+              variant="outline-success"
+              size="sm"
+              onClick={() => handleEdit(comment.id, comment.content)}
+            >
+              <FontAwesomeIcon icon={faEdit} /> Chỉnh sửa
+            </Button>
+            <Button
+              variant="outline-danger"
+              size="sm"
+              onClick={() => handleDelete(comment.id)}
+            >
+              <FontAwesomeIcon icon={faTrash} /> Xóa
+            </Button>
+          </div>
+        </ListGroup.Item>
+      ))
+    : "Chưa có bình luận nào";
+
   return (
     <div>
-      <h3>Comments</h3>
-      <ListGroup>
-        {comments.map((comment) => (
-          <ListGroup.Item key={comment.id}>
-            <div className="d-flex align-items-start">
-              <Image
-                src={comment.avatar}
-                roundedCircle
-                className="mr-3"
-                width={50}
-                height={50}
-                alt="Avatar"
-              />
-              <div>
-                <div>
-                  <strong>{comment.author}</strong>
-                </div>
-                {editingCommentId === comment.id ? (
-                  <Form.Group>
-                    <Form.Control
-                      as="textarea"
-                      value={editingComment}
-                      onChange={(event) =>
-                        setEditingComment(event.target.value)
-                      }
-                    />
-                    <div className="d-flex justify-content-end mt-2">
-                      <Button
-                        variant="outline-secondary"
-                        size="sm"
-                        onClick={handleCancelEdit}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={() => handleSaveEdit(comment.id)}
-                        className="ml-2"
-                      >
-                        Save
-                      </Button>
-                    </div>
-                  </Form.Group>
-                ) : (
-                  <>
-                    <div>{comment.content}</div>
-                    <div className="comment-timestamp">
-                      {formatTimestamp(comment.timestamp)}
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-            <div className="comment-actions mt-2">
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => handleReply(comment.id)}
-              >
-                <FontAwesomeIcon icon={faReply} /> Reply
-              </Button>
-              <Button
-                variant="success"
-                size="sm"
-                onClick={() => handleEdit(comment.id, comment.content)}
-              >
-                <FontAwesomeIcon icon={faEdit} /> Edit
-              </Button>
-              <Button
-                variant="danger"
-                size="sm"
-                onClick={() => handleDelete(comment.id)}
-              >
-                <FontAwesomeIcon icon={faTrash} /> Delete
-              </Button>
-            </div>
-          </ListGroup.Item>
-        ))}
-      </ListGroup>
+      <h3 className="mt-2">Bình Luận</h3>
+      <ListGroup>{commentView}</ListGroup>
       <Form onSubmit={handleSubmit} className="mt-4">
         <Form.Group>
           <InputGroup>
             <Form.Control
               as="textarea"
               rows={3}
-              placeholder="Write a comment..."
+              placeholder="Viết bình luận..."
               value={comment}
               onChange={handleInputChange}
             />
           </InputGroup>
         </Form.Group>
-        <Button variant="primary" type="submit">
-          Submit
+        <Button variant="primary" className="mt-2" type="submit">
+          Xác nhận
         </Button>
       </Form>
     </div>

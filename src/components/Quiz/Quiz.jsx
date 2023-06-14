@@ -15,7 +15,7 @@ const Quiz = ({ tests, user }) => {
           if (response.data.result) {
             setTestResult(response.data.result);
           }
-          console.log(testResult);
+          // console.log(testResult);
         })
         .catch(function (error) {
           console.log(error);
@@ -35,7 +35,7 @@ const Quiz = ({ tests, user }) => {
     multiAnswer,
     e
   ) => {
-    console.log(e.target.checked);
+    // console.log(e.target.checked);
     setAnswers((prevAnswers) => {
       const existingAnswerIndex = prevAnswers.findIndex(
         (answer) => answer.question_id === questionId
@@ -117,11 +117,11 @@ const Quiz = ({ tests, user }) => {
       user_id: user.id,
     };
 
-    console.log(test);
+    // console.log(test);
     axios
       .post(AppUrl.TestData + `${tests.id}/${user.id}`, test)
       .then(function (response) {
-        console.log(JSON.stringify(response.data));
+        // console.log(JSON.stringify(response.data));
         fetchTestResult(tests);
       })
       .catch(function (error) {

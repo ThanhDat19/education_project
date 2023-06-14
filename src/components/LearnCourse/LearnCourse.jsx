@@ -22,11 +22,17 @@ const LearnCourse = (props) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchLessonData = () => {
+  const fetchLessonData = async () => {
     RestClient.GetRequest(AppUrl.CourseDetails + id + "/learn")
-      .then((result) => {
-        console.log(result);
-        setLessons(result);
+      .then(async (result) => {
+        // console.log(result);
+        await setLessons(result);
+
+        if (result.length > 0) {
+          let firstLesson = await result[0];
+          // console.log(firstLesson);
+          await handleVideoSelect(firstLesson.video_url, firstLesson.id);
+        }
         if (props.user) {
           setIsLoggedIn(true);
 
@@ -52,13 +58,6 @@ const LearnCourse = (props) => {
     }
   }, [selectedLesson]);
 
-  useEffect(() => {
-    if (lessons.length > 0) {
-      let firstLesson = lessons[0];
-      handleVideoSelect(firstLesson.video_url, firstLesson.id);
-    }
-  }, []);
-
   const handleVideoSelect = async (video, id) => {
     // console.log("call handleVideoSelect", id);
     setSelectedVideo(video);
@@ -71,12 +70,14 @@ const LearnCourse = (props) => {
       // Kiểm tra nếu id của lesson trùng khớp với idLesson
       if (lesson.id === idLesson) {
         const data = lesson.students;
-        data[0].watched_video = value;
-        // Cập nhật giá trị của lesson
-        return {
-          ...lesson,
-          students: data,
-        };
+        if (data[0].watched_video < value) {
+          data[0].watched_video = value;
+          // Cập nhật giá trị của lesson
+          return {
+            ...lesson,
+            students: data,
+          };
+        }
       }
       // Trả về lesson không thay đổi
       return lesson;
@@ -175,7 +176,7 @@ const LearnCourse = (props) => {
                 <Tabs defaultActiveKey="comment" id="uncontrolled-tab-example">
                   <Tab eventKey="comment" title="Bình Luận">
                     {/* Phần bình luận */}
-                    <Comment />
+                    <Comment user={user} lesson={selectedLesson}/>
                   </Tab>
                   <Tab eventKey="test" title="Kiểm tra">
                     {tests && <Quiz tests={tests.data} user={user} />}
