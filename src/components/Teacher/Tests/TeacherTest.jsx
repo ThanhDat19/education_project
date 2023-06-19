@@ -12,6 +12,9 @@ import axios from "axios";
 import AppUrl from "../../../api/AppUrl";
 import ReactPaginate from "react-paginate";
 import parse from "html-react-parser";
+import SweetAlert from "react-bootstrap-sweetalert";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const TeacherTest = ({ user }) => {
   const [tests, setTests] = useState([]);
@@ -35,6 +38,8 @@ const TeacherTest = ({ user }) => {
   const [totalQuestionPages, setTotalQuestionPages] = useState(0);
   const [selectedQuestionTypes, setSelectedQuestionTypes] = useState([]);
   const [currentQuestionPage, setCurrentQuestionPage] = useState(1);
+
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     fetchTests(1);
@@ -188,9 +193,11 @@ const TeacherTest = ({ user }) => {
       if (response.status === 200) {
         fetchTests(1);
         setShowEditTestModal(false);
+        toast.success("Cập nhật bài kiểm tra thành công");
       }
     } catch (error) {
       console.error("Error updating test:", error);
+      toast.error("Cập nhật bài kiểm tra thành công");
     }
   };
 
@@ -205,19 +212,32 @@ const TeacherTest = ({ user }) => {
       if (response.status === 200) {
         fetchTests(1);
         setShowAddTestModal(false);
+        toast.success("Thêm mới bài kiểm tra thành công");
       }
     } catch (error) {
       console.error("Error adding test:", error);
+      toast.error("Có lỗi xảy ra vui lòng kiểm tra");
     }
   };
 
   const deleteTest = async (id) => {
+    setShowAlert(true);
+  };
+
+  const handleConfirmDeleteChoice = async (id) => {
     try {
       await axios.delete(AppUrl.DeleteTest + id);
       fetchTests(1);
+      toast.success("Xóa bài kiểm tra thành công");
+      setShowAlert(false)
     } catch (error) {
       console.error("Error deleting test:", error);
+      toast.error("Xóa bài kiểm tra thất bại");
     }
+  };
+
+  const handleCancelChoice = () => {
+    setShowAlert(false);
   };
   const handlePageClick = (event) => {
     fetchTests(event.selected + 1);
@@ -274,6 +294,19 @@ const TeacherTest = ({ user }) => {
           >
             Xóa
           </Button>
+          {showAlert && (
+            <SweetAlert
+              title="Xác nhận"
+              showCancel
+              cancelBtnText="Hủy"
+              confirmBtnText="Xóa"
+              confirmBtnBsStyle="danger"
+              onConfirm={() => handleConfirmDeleteChoice(test.id)}
+              onCancel={handleCancelChoice}
+            >
+              Bạn có chắc chắn muốn xóa bài kiểm tra không?
+            </SweetAlert>
+          )}
         </td>
       </tr>
     ));
@@ -516,13 +549,14 @@ const TeacherTest = ({ user }) => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleAddTestModal}>
-            Close
+            Đóng
           </Button>
           <Button variant="primary" onClick={handleAddTest}>
-            Add
+            Thêm
           </Button>
         </Modal.Footer>
       </Modal>
+      <ToastContainer />
     </Container>
   );
 };

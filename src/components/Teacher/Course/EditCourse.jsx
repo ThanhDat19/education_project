@@ -5,6 +5,9 @@ import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import AppUrl from "../../../api/AppUrl";
 import { format, parse } from "date-fns";
+import SweetAlert from "react-bootstrap-sweetalert";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const EditCourse = (props) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -16,6 +19,7 @@ const EditCourse = (props) => {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [course, setCourse] = useState([]);
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -63,6 +67,22 @@ const EditCourse = (props) => {
   };
 
   const handleUpdateCourse = async () => {
+    setShowAlert(true);
+  };
+
+  useEffect(() => {
+    // Clean up the preview URL when the component is unmounted or when a new image is selected
+    return () => {
+      if (imagePreview) {
+        URL.revokeObjectURL(imagePreview);
+      }
+    };
+  }, [imagePreview]);
+  console.log(course);
+
+  const handleConfirmChoice = async () => {
+    setShowAlert(false);
+
     // Prepare the form data
     const formData = new FormData();
     formData.append("title", newCourseTitle);
@@ -90,23 +110,23 @@ const EditCourse = (props) => {
         }
       );
       console.log(response.data);
+      if (response.data.success) {
+        toast.success("Khóa học đã được cập nhật thành công.");
+      }else{
+        toast.error("Khóa học đã được cập nhật thất bại.");
+      }
 
       // Handle the response as needed
     } catch (error) {
       // Handle errors
       console.log(error);
+      toast.error("Error: " + error);
     }
   };
 
-  useEffect(() => {
-    // Clean up the preview URL when the component is unmounted or when a new image is selected
-    return () => {
-      if (imagePreview) {
-        URL.revokeObjectURL(imagePreview);
-      }
-    };
-  }, [imagePreview]);
-  console.log(course);
+  const handleCancelChoice = () => {
+    setShowAlert(false);
+  };
 
   return (
     <>
@@ -189,11 +209,27 @@ const EditCourse = (props) => {
               />
             </Form.Group>
 
-            <Button variant="primary" onClick={handleUpdateCourse}>
+            <Button
+              variant="primary"
+              className="mt-2"
+              onClick={handleUpdateCourse}
+            >
               Cập nhật khóa học
             </Button>
+            {showAlert && (
+              <SweetAlert
+                title="Xác nhận"
+                showCancel
+                cancelBtnText="Hủy"
+                onConfirm={handleConfirmChoice}
+                onCancel={handleCancelChoice}
+              >
+                Bạn có chắc chắn muốn cập nhật khóa học không?
+              </SweetAlert>
+            )}
           </Col>
         </Row>
+        <ToastContainer />
       </Container>
     </>
   );

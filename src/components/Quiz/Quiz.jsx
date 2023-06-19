@@ -3,19 +3,24 @@ import { Form, Button, Card } from "react-bootstrap";
 import AppUrl from "../../api/AppUrl";
 import axios from "axios";
 
-const Quiz = ({ tests, user }) => {
+const Quiz = ({ tests, user, lesson }) => {
   const [answers, setAnswers] = useState([]);
   const [testResult, setTestResult] = useState(null);
 
   const fetchTestResult = (tests) => {
+    setTestResult(null);
+
     if (tests) {
       axios
         .post(AppUrl.GetTestResult + user.id + "/" + tests.id)
         .then(function (response) {
+          console.log(tests.id);
+
           if (response.data.result) {
             setTestResult(response.data.result);
+
+            console.log(testResult);
           }
-          // console.log(testResult);
         })
         .catch(function (error) {
           console.log(error);

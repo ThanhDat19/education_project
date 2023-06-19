@@ -14,6 +14,9 @@ import axios from "axios";
 import parse from "html-react-parser";
 import ReactPaginate from "react-paginate";
 import AppUrl from "../../../api/AppUrl";
+import SweetAlert from "react-bootstrap-sweetalert";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const TeacherQuestion = ({ user }) => {
   const [questions, setQuestions] = useState([]);
@@ -39,6 +42,7 @@ const TeacherQuestion = ({ user }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [selectedQuestionId, setSelectedQuestionId] = useState(null);
   const [question, setQuestion] = useState([]);
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -82,7 +86,6 @@ const TeacherQuestion = ({ user }) => {
       }
 
       // Gửi yêu cầu thêm câu hỏi mới lên server
-      // Gửi yêu cầu thêm câu hỏi mới lên server
       const formData = new FormData();
       formData.append("question", newQuestion.question);
       formData.append("question_type_id", newQuestion.question_type_id);
@@ -113,15 +116,18 @@ const TeacherQuestion = ({ user }) => {
         // Cập nhật danh sách câu hỏi bằng cách gọi lại API hoặc thực hiện các bước khác cần thiết để cập nhật danh sách câu hỏi
 
         // Hiển thị thông báo thành công
-        alert("Thêm câu hỏi thành công!");
+        // alert("Thêm câu hỏi thành công!");
+        toast.success("Thêm câu hỏi thành công!");
       } else {
         // Hiển thị thông báo lỗi nếu thêm câu hỏi không thành công
-        alert("Thêm câu hỏi không thành công. Vui lòng thử lại sau.");
+        // alert("Thêm câu hỏi không thành công. Vui lòng thử lại sau.");
+        toast.error("Thêm câu hỏi không thành công. Vui lòng thử lại sau.");
       }
     } catch (error) {
       console.error("Error adding question:", error);
       // Hiển thị thông báo lỗi nếu xảy ra lỗi khi thêm câu hỏi
-      alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+      // alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+      toast.error("Đã xảy ra lỗi. Vui lòng thử lại sau.");
     }
   };
 
@@ -154,13 +160,24 @@ const TeacherQuestion = ({ user }) => {
   };
   //Delete
   const handleShowDeleteQuestion = async (questionId) => {
+    setShowAlert(true);
+  };
+
+  const handleConfirmDeleteChoice = async (questionId) => {
     try {
       await axios.delete(AppUrl.deleteQuestion + questionId);
       // Xóa câu hỏi thành công, cập nhật danh sách câu hỏi
       getQuestions(1);
+      setShowAlert(false);
+      toast.success("Xóa câu hỏi thành công!");
     } catch (error) {
       console.error("Error deleting question:", error);
+      toast.error("Đã có lỗi xảy ra");
     }
+  };
+
+  const handleCancelChoice = () => {
+    setShowAlert(false);
   };
   //Handle Edit
   const handleEditQuestion = async () => {
@@ -212,14 +229,19 @@ const TeacherQuestion = ({ user }) => {
         // Cập nhật danh sách câu hỏi bằng cách gọi lại API hoặc thực hiện các bước khác cần thiết để cập nhật danh sách câu hỏi
         handleCloseEditQuestionModal();
         // Hiển thị thông báo thành công
-        alert("Chỉnh sửa câu hỏi thành công!");
+        // alert("Chỉnh sửa câu hỏi thành công!");
+        toast.success("Chỉnh sửa câu hỏi thành công!");
       } else {
         // Hiển thị thông báo lỗi nếu chỉnh sửa câu hỏi không thành công
-        alert("Chỉnh sửa câu hỏi không thành công. Vui lòng thử lại sau.");
+        // alert("Chỉnh sửa câu hỏi không thành công. Vui lòng thử lại sau.");
+        toast.error(
+          "Chỉnh sửa câu hỏi không thành công. Vui lòng thử lại sau."
+        );
       }
     } catch (error) {
       console.error("Error edit question:", error);
-      alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+      // alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+      toast.error("Đã xảy ra lỗi. Vui lòng thử lại sau.");
     }
   };
 
@@ -555,6 +577,19 @@ const TeacherQuestion = ({ user }) => {
                 >
                   Xóa
                 </Button>
+                {showAlert && (
+                  <SweetAlert
+                    title="Xác nhận"
+                    showCancel
+                    cancelBtnText="Hủy"
+                    confirmBtnText="Xóa"
+                    confirmBtnBsStyle="danger"
+                    onConfirm={() => handleConfirmDeleteChoice(item.id)}
+                    onCancel={handleCancelChoice}
+                  >
+                    Bạn có chắc chắn muốn xóa câu hỏi không?
+                  </SweetAlert>
+                )}
               </td>
             </tr>
           ))}
@@ -790,6 +825,7 @@ const TeacherQuestion = ({ user }) => {
           </Col>
         </Row>
       </Container>
+      <ToastContainer />
     </Fragment>
   );
 };

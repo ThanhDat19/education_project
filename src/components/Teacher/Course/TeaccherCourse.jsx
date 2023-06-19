@@ -16,6 +16,9 @@ import ReactPaginate from "react-paginate";
 import AppUrl from "../../../api/AppUrl";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import SweetAlert from "react-bootstrap-sweetalert";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const TeacherCourse = ({ user }) => {
   const [allCourses, setAllCourses] = useState([]);
@@ -39,7 +42,8 @@ const TeacherCourse = ({ user }) => {
   const [price, setPrice] = useState("");
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-  // Add more state variables for other course fields
+  const [showAlert, setShowAlert] = useState(false);
+  const [showAlertDelete, setShowAlertDelete] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -116,14 +120,8 @@ const TeacherCourse = ({ user }) => {
     getCourses(1);
   };
 
-  const deleteCourse = async (id) => {
-    try {
-      await axios.delete(AppUrl.DeleteCourse + "/" + id);
-      // Xóa khóa học thành công, cập nhật danh sách khóa học
-      setAllCourses(allCourses.filter((course) => course.id !== id));
-    } catch (error) {
-      console.error("Error deleting course:", error);
-    }
+  const deleteCourse = async () => {
+    setShowAlertDelete(true);
   };
 
   const handleAddCourseModal = () => {
@@ -134,7 +132,26 @@ const TeacherCourse = ({ user }) => {
     setNewCourseTitle(event.target.value);
   };
 
-  const handleAddCourse = async () => {
+  const handleCancelChoice = () => {
+    setShowAlert(false);
+    setShowAlertDelete(false);
+  };
+  const handleConfirmDeleteChoice = async (id) => {
+    // console.log(id);
+    try {
+      await axios.delete(AppUrl.DeleteCourse + "/" + id);
+      // Xóa khóa học thành công, cập nhật danh sách khóa học
+      setAllCourses(allCourses.filter((course) => course.id !== id));
+      toast.success("Xóa khóa học thành công.");
+    } catch (error) {
+      console.error("Error deleting course:", error);
+      toast.error("Xóa khóa học thất bại.");
+    }
+    setShowAlertDelete(false);
+  };
+  const handleConfirmChoice = async () => {
+    setShowAlert(false);
+
     const formData = new FormData();
     formData.append("newCourseTitle", newCourseTitle);
     formData.append("courseCategoryId", courseCategoryId);
@@ -169,10 +186,16 @@ const TeacherCourse = ({ user }) => {
       // Đóng modal
       handleAddCourseModal();
       getCourses(1, user.id);
+      toast.success("Khóa học đã được tạo thành công.");
     } else {
       // Xử lý không thành công, hiển thị thông báo lỗi
       // console.log("Error:", response.data.message);
+      toast.error("Đã xảy ra lỗi khi tạo khóa học.");
     }
+  };
+
+  const handleAddCourse = async () => {
+    setShowAlert(true);
   };
 
   const handleImageChange = (e) => {
@@ -224,7 +247,7 @@ const TeacherCourse = ({ user }) => {
                 <Button
                   variant="outline-danger"
                   size="lg"
-                  onClick={() => deleteCourse(item.id)}
+                  onClick={deleteCourse}
                   style={{
                     borderRadius: "10px",
                     fontSize: "16px",
@@ -234,6 +257,19 @@ const TeacherCourse = ({ user }) => {
                 >
                   Xóa
                 </Button>
+                {showAlertDelete && (
+                  <SweetAlert
+                    title="Xác nhận"
+                    showCancel
+                    cancelBtnText="Hủy"
+                    confirmBtnText="Xóa"
+                    confirmBtnBsStyle="danger"
+                    onConfirm={() => handleConfirmDeleteChoice(item.id)}
+                    onCancel={handleCancelChoice}
+                  >
+                    Bạn có chắc chắn muốn xóa khóa học không?
+                  </SweetAlert>
+                )}
 
                 <Button
                   variant="outline-primary"
@@ -394,6 +430,18 @@ const TeacherCourse = ({ user }) => {
                 <Button variant="primary" onClick={handleAddCourse}>
                   Tạo khóa học
                 </Button>
+
+                {showAlert && (
+                  <SweetAlert
+                    title="Xác nhận"
+                    showCancel
+                    cancelBtnText="Hủy"
+                    onConfirm={handleConfirmChoice}
+                    onCancel={handleCancelChoice}
+                  >
+                    Bạn có chắc chắn muốn tạo khóa học không?
+                  </SweetAlert>
+                )}
               </Modal.Footer>
             </Modal>
           </Col>
@@ -422,6 +470,7 @@ const TeacherCourse = ({ user }) => {
           </Col>
         </Row>
       </Container>
+      <ToastContainer />
     </Fragment>
   );
 };
