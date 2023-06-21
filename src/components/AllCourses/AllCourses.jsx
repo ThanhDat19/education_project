@@ -124,7 +124,7 @@ const Courses = () => {
   return (
     <Fragment>
       <Container style={{ minHeight: "100vh" }}>
-        <h1 className="serviceMainTitle text-center">MY COURSES</h1>
+        <h1 className="serviceMainTitle text-center">TẤT CẢ KHÓA HỌC</h1>
         <div className="bottom"></div>
         <Row>
           <Col md={3}>

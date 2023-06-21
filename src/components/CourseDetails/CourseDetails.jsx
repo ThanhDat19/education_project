@@ -179,7 +179,7 @@ const CourseDetails = (props) => {
       </Link>
     )
   ) : (
-    "DONT LOGIN"
+    "Hãy đăng nhập để mua khóa học"
   );
   return loading ? (
     <Spinner animation="border" role="status">

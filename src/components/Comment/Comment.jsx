@@ -141,7 +141,7 @@ const Comment = ({ user, lesson }) => {
                 {formatTimestamp(comment.created_at)}
               </div>
               {editingCommentId === comment.id ? (
-                <Form.Group >
+                <Form.Group>
                   <Form.Control
                     as="textarea"
                     value={editingComment}
@@ -173,23 +173,27 @@ const Comment = ({ user, lesson }) => {
               )}
             </div>
           </div>
-          <div className="comment-actions mt-2">
-            <Button
-              className="mx-1"
-              variant="outline-success"
-              size="sm"
-              onClick={() => handleEdit(comment.id, comment.content)}
-            >
-              <FontAwesomeIcon icon={faEdit} /> Chỉnh sửa
-            </Button>
-            <Button
-              variant="outline-danger"
-              size="sm"
-              onClick={() => handleDelete(comment.id)}
-            >
-              <FontAwesomeIcon icon={faTrash} /> Xóa
-            </Button>
-          </div>
+          {user.id === comment.user.id || user.roles === "teacher" ? (
+            <div className="comment-actions mt-2">
+              <Button
+                className="mx-1"
+                variant="outline-success"
+                size="sm"
+                onClick={() => handleEdit(comment.id, comment.content)}
+              >
+                <FontAwesomeIcon icon={faEdit} /> Chỉnh sửa
+              </Button>
+              <Button
+                variant="outline-danger"
+                size="sm"
+                onClick={() => handleDelete(comment.id)}
+              >
+                <FontAwesomeIcon icon={faTrash} /> Xóa
+              </Button>
+            </div>
+          ) : (
+            ""
+          )}
         </ListGroup.Item>
       ))
     : "Chưa có bình luận nào";

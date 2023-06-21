@@ -22,6 +22,7 @@ const TeacherTest = ({ user }) => {
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedLesson, setSelectedLesson] = useState("");
+  const [selectedType, setSelectedType] = useState("");
   const [showAddTestModal, setShowAddTestModal] = useState(false);
   const [newTestTitle, setNewTestTitle] = useState("");
   const [newTestDescription, setNewTestDescription] = useState("");
@@ -29,6 +30,7 @@ const TeacherTest = ({ user }) => {
   const [totalPages, setTotalPages] = useState(0);
   const [editTestId, setEditTestId] = useState("");
   const [editTestTitle, setEditTestTitle] = useState("");
+  const [editTestType, setEditTestType] = useState("");
   const [editTestDescription, setEditTestDescription] = useState("");
   const [showEditTestModal, setShowEditTestModal] = useState(false);
 
@@ -40,6 +42,8 @@ const TeacherTest = ({ user }) => {
   const [currentQuestionPage, setCurrentQuestionPage] = useState(1);
 
   const [showAlert, setShowAlert] = useState(false);
+
+  const [types, setTypes] = useState([]);
 
   useEffect(() => {
     fetchTests(1);
@@ -68,7 +72,11 @@ const TeacherTest = ({ user }) => {
 
   // Modify the handleQuestionTypeChange function to update the selected question types
   const handleQuestionTypeChange = (event) => {
-    const questionTypeId = event.target.id;
+    const coursesSelected = courses.filter(
+      (courses) => courses.id == selectedCourse
+    );
+
+    const questionTypeId = coursesSelected[0].type;
     setSelectedQuestionTypes((prevSelectedQuestionTypes) =>
       event.target.checked
         ? [...prevSelectedQuestionTypes, questionTypeId]
@@ -85,6 +93,7 @@ const TeacherTest = ({ user }) => {
         setTests(response.data.tests);
         setCourses(response.data.courses);
         setTotalPages(response.data.total_pages);
+        setTypes(response.data.types);
       }
     } catch (error) {
       console.error("Error fetching tests:", error);
@@ -147,34 +156,34 @@ const TeacherTest = ({ user }) => {
     }
 
     return allQuestions.map((question, index) => {
-      const questionType = questionTypes.find(
-        (type) => type.id === question.question_type_id
-      );
-      // console.log(questionType.id)
-      // console.log(, questionType.id, selectedQuestionTypes)
-      if (!selectedQuestionTypes.includes(`${questionType.id}`)) {
-        return null;
-      }
+      if (editTestType) {
+        const questionType = questionTypes.find(
+          (type) => type.id === editTestType
+        );
+        if (!questionType) {
+          return null;
+        }
 
-      return (
-        <tr key={question.id}>
-          <td>{index + 1}</td>
-          <td>{question.question}</td>
-          <td>{questionType?.name}</td>
-          <td>{question.score}</td>
-          <td>{question.multi_answer ? "Có" : "Không"}</td>
-          <td>
-            <Form.Check
-              type="checkbox"
-              id={`question-${question.id}`}
-              checked={selectedQuestions.includes(question.id)}
-              onChange={(e) =>
-                handleQuestionChange(question.id, e.target.checked)
-              }
-            />
-          </td>
-        </tr>
-      );
+        return (
+          <tr key={question.id}>
+            <td>{index + 1}</td>
+            <td>{question.question}</td>
+            <td>{questionType?.name}</td>
+            <td>{question.score}</td>
+            <td>{question.multi_answer ? "Có" : "Không"}</td>
+            <td>
+              <Form.Check
+                type="checkbox"
+                id={`question-${question.id}`}
+                checked={selectedQuestions.includes(question.id)}
+                onChange={(e) =>
+                  handleQuestionChange(question.id, e.target.checked)
+                }
+              />
+            </td>
+          </tr>
+        );
+      }
     });
   };
   const handleAddQuestions = () => {
@@ -208,6 +217,7 @@ const TeacherTest = ({ user }) => {
         lesson_id: selectedLesson,
         title: newTestTitle,
         description: newTestDescription,
+        type: selectedType,
       });
       if (response.status === 200) {
         fetchTests(1);
@@ -229,7 +239,7 @@ const TeacherTest = ({ user }) => {
       await axios.delete(AppUrl.DeleteTest + id);
       fetchTests(1);
       toast.success("Xóa bài kiểm tra thành công");
-      setShowAlert(false)
+      setShowAlert(false);
     } catch (error) {
       console.error("Error deleting test:", error);
       toast.error("Xóa bài kiểm tra thất bại");
@@ -266,8 +276,10 @@ const TeacherTest = ({ user }) => {
     };
 
     const handleEditTestModal = (test) => {
+      console.log(test);
       setEditTestId(test.id);
       setEditTestTitle(test.title);
+      setEditTestType(test.type);
       setEditTestDescription(test.description);
       setShowEditTestModal(true);
     };
@@ -418,7 +430,7 @@ const TeacherTest = ({ user }) => {
         </Modal.Header>
         <Modal.Body>
           <Form.Group controlId="formTitle">
-            <Form.Label>Title:</Form.Label>
+            <Form.Label>Tiêu đề:</Form.Label>
             <Form.Control
               type="text"
               value={editTestTitle}
@@ -426,7 +438,7 @@ const TeacherTest = ({ user }) => {
             />
           </Form.Group>
           <Form.Group controlId="formDescription">
-            <Form.Label>Description:</Form.Label>
+            <Form.Label>Miểu tả:</Form.Label>
             <Form.Control
               as="textarea"
               rows={3}
@@ -435,17 +447,23 @@ const TeacherTest = ({ user }) => {
             />
           </Form.Group>
           <Form.Group controlId="formQuestionTypes">
-            <Form.Label>Question Types:</Form.Label>
-            {questionTypes.map((type) => (
-              <Form.Check
-                key={type.id}
-                type="checkbox"
-                id={type.id}
-                label={type.name}
-                // checked={selectedQuestionTypes.includes(type.id)}
-                onChange={handleQuestionTypeChange}
-              />
-            ))}
+            <Form.Label>Lĩnh vực:</Form.Label>
+            {questionTypes.map((type) => {
+              console.log(editTestType);
+              const shouldRender = editTestType === type.id;
+              if (shouldRender) {
+                return (
+                  <Form.Label
+                    style={{ marginLeft: "8px" }}
+                    key={type.id}
+                    id={type.id}
+                  >
+                    {type.name}
+                  </Form.Label>
+                );
+              }
+              return null;
+            })}
           </Form.Group>
           <Table striped bordered hover>
             <thead>
@@ -545,6 +563,22 @@ const TeacherTest = ({ user }) => {
               value={newTestDescription}
               onChange={handleNewTestDescriptionChange}
             />
+          </Form.Group>
+
+          <Form.Group controlId="formType">
+            <Form.Label>Lĩnh vực:</Form.Label>
+            <Form.Control
+              as="select"
+              value={selectedType}
+              onChange={(event) => setSelectedType(event.target.value)}
+            >
+              <option value="">Tất cả</option>
+              {types.map((type) => (
+                <option key={type.id} value={type.id}>
+                  {type.name}
+                </option>
+              ))}
+            </Form.Control>
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>

@@ -23,6 +23,7 @@ import "react-toastify/dist/ReactToastify.css";
 const TeacherCourse = ({ user }) => {
   const [allCourses, setAllCourses] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [types, setTypes] = useState([]);
   const [totalCourse, setTotalCourse] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -38,6 +39,7 @@ const TeacherCourse = ({ user }) => {
   const [showAddCourseModal, setShowAddCourseModal] = useState(false);
   const [newCourseTitle, setNewCourseTitle] = useState("");
   const [courseCategoryId, setCourseCategoryId] = useState("");
+  const [courseType, setCourseType] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState(null);
@@ -68,6 +70,7 @@ const TeacherCourse = ({ user }) => {
         setTotalCourse(response.data.courses.total);
         setTotalPages(response.data.total_pages);
         setCategories(response.data.categories);
+        setTypes(response.data.types);
         setLoading(false);
       }
     } catch (error) {
@@ -155,6 +158,7 @@ const TeacherCourse = ({ user }) => {
     const formData = new FormData();
     formData.append("newCourseTitle", newCourseTitle);
     formData.append("courseCategoryId", courseCategoryId);
+    formData.append("type", courseType);
     formData.append("description", description);
     formData.append("price", price);
     formData.append("image", image);
@@ -163,9 +167,9 @@ const TeacherCourse = ({ user }) => {
 
     console.log(formData);
     // In dữ liệu trong formData
-    for (let pair of formData.entries()) {
-      console.log(pair[0], pair[1]);
-    }
+    // for (let pair of formData.entries()) {
+    //   console.log(pair[0], pair[1]);
+    // }
     const response = await axios.post(AppUrl.teacherPostCourse, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -372,6 +376,23 @@ const TeacherCourse = ({ user }) => {
                     {categories.map((category) => (
                       <option key={category.id} value={category.id}>
                         {category.name}
+                      </option>
+                    ))}
+                  </Form.Control>
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Label>Lĩnh vực</Form.Label>
+                  <Form.Control
+                    as="select"
+                    name="type"
+                    value={courseType}
+                    onChange={(e) => setCourseType(e.target.value)}
+                  >
+                    <option value="">Chọn lĩnh vực</option>
+                    {types.map((type) => (
+                      <option key={type.id} value={type.id}>
+                        {type.name}
                       </option>
                     ))}
                   </Form.Control>

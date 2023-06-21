@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Navbar, Nav, NavDropdown } from "react-bootstrap";
+import { Container, Navbar, Nav, NavDropdown, Row } from "react-bootstrap";
 import { Link, NavLink } from "react-router-dom";
 import "../../asset/css/custom.css";
 import "../../asset/css/bootstrap.min.css";
@@ -8,7 +8,7 @@ import AppUrl from "../../api/AppUrl";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { logout  } from "../../redux/actions/authActions";
+import { logout } from "../../redux/actions/authActions";
 import { useDispatch } from "react-redux";
 
 const TopNavigation = () => {
@@ -20,7 +20,6 @@ const TopNavigation = () => {
   const [userName, setUserName] = useState("");
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
-  
 
   const onScroll = () => {
     if (window.scrollY > 100) {
@@ -124,6 +123,64 @@ const TopNavigation = () => {
               </Nav.Link>
               {isLoggedIn ? (
                 <>
+                  {/* Teacher */}
+                  {user.roles === "teacher" ? (
+                    <NavDropdown
+                      className={navBarItem}
+                      title="QUẢN LÝ"
+                      id="basic-nav-dropdown"
+                    >
+                      <NavDropdown.Item
+                        className={navBarItem}
+                        as={Link}
+                        to="/course-management"
+                      >
+                        Khóa học của tôi
+                      </NavDropdown.Item>
+                      <NavDropdown.Item
+                        className={navBarItem}
+                        as={Link}
+                        to="/tests-management"
+                      >
+                        Bài kiểm tra
+                      </NavDropdown.Item>
+                      <NavDropdown.Item
+                        className={navBarItem}
+                        as={Link}
+                        to="/question-management"
+                      >
+                        Câu hỏi và Lựa chọn
+                      </NavDropdown.Item>
+                      <NavDropdown.Divider />
+                      <NavDropdown.Item
+                        title={userName}
+                        className={navBarItem}
+                        href="#action/3.4"
+                      >
+                        {userName}
+                        {/* <Nav.Link>
+                        <span className={navBarItem}>{userName}</span>
+                      </Nav.Link> */}
+                      </NavDropdown.Item>
+                    </NavDropdown>
+                  ) : (
+                    ""
+                  )}
+
+                  {/* Student */}
+                  {user.roles === "student" ? (
+                    <Nav.Link>
+                      <NavLink
+                        activeclassname="menu_active"
+                        className={navBarItem}
+                        to="/student-courses"
+                      >
+                        KHÓA HỌC CỦA TÔI
+                      </NavLink>
+                    </Nav.Link>
+                  ) : (
+                    ""
+                  )}
                   <Nav.Link>
                     <NavLink
                       activeclassname="menu_active"
@@ -134,32 +191,6 @@ const TopNavigation = () => {
                       ĐĂNG XUẤT
                     </NavLink>
                   </Nav.Link>
-                  <NavDropdown
-                    className={navBarItem}
-                    title="QUẢN LÝ"
-                    id="basic-nav-dropdown"
-                  >
-                    <NavDropdown.Item className={navBarItem} as= {Link} to='/course-management'>
-                      Khóa học của tôi
-                    </NavDropdown.Item>
-                    <NavDropdown.Item className={navBarItem} as= {Link} to='/tests-management'>
-                      Bài kiểm tra
-                    </NavDropdown.Item>
-                    <NavDropdown.Item className={navBarItem} as= {Link} to='/question-management'>
-                      Câu hỏi và Lựa chọn
-                    </NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item
-                      title={userName}
-                      className={navBarItem}
-                      href="#action/3.4"
-                    >
-                      {userName}
-                      {/* <Nav.Link>
-                        <span className={navBarItem}>{userName}</span>
-                      </Nav.Link> */}
-                    </NavDropdown.Item>
-                  </NavDropdown>
                 </>
               ) : (
                 <Nav.Link>

@@ -185,10 +185,7 @@ const TeacherQuestion = ({ user }) => {
       const formData = new FormData();
       const questionText =
         newQuestion.question !== "" ? newQuestion.question : question.question;
-      const questionTypeId =
-        newQuestion.question_type_id !== ""
-          ? newQuestion.question_type_id
-          : question.question_type.id;
+      const questionTypeId = question.question_type.id;
       const score =
         newQuestion.score !== 0 ? newQuestion.score : question.score;
       const multiAnswer =

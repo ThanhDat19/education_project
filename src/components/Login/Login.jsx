@@ -7,7 +7,9 @@ import AppUrl from "../../api/AppUrl";
 import { useDispatch, useSelector } from "react-redux";
 import { loginSuccess, loginFailure } from "../../redux/actions/authActions";
 import { getUser } from "../../redux/actions/authActions";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -26,10 +28,13 @@ const Login = () => {
       const user = response.data.user;
       dispatch(getUser(user));
       // localStorage.setItem("user", JSON.stringify(response.data.user));
-      Cookies.set('user', JSON.stringify(user), { expires: 7 });
+      Cookies.set("user", JSON.stringify(user), { expires: 7 });
       navigate("/");
     } catch (error) {
       console.log(error);
+      toast.error(
+        "Đăng nhập thất bại! Hãy kiểm tra lại tài khoản và mật khẩu."
+      );
     }
   };
 
@@ -48,26 +53,26 @@ const Login = () => {
           {error && <div>{error}</div>}
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3 mt-4" controlId="formBasicEmail">
-              <Form.Label>Email address</Form.Label>
+              <Form.Label>Email</Form.Label>
               <Form.Control
                 className="p-3"
                 type="email"
-                placeholder="Enter email"
+                placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
               <Form.Text className="text-muted">
-                We'll never share your email with anyone else.
+                Lưu ý không chia sẻ tài khoản với bất kì ai.
               </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
+              <Form.Label>Mật khẩu</Form.Label>
               <Form.Control
                 className="p-3"
                 type="password"
-                placeholder="Password"
+                placeholder="Mật khẩu"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -79,25 +84,26 @@ const Login = () => {
                 name="flexCheck"
                 value=""
                 id="flexCheckDefault"
-                label="Remember me"
+                label="Nhớ mật khẩu"
               />
-              <a href="!#">Forgot password?</a>
+              <a href="!#">Quên mật khẩu?</a>
             </div>
 
             <div className="text-center text-md-start mt-4 pt-2">
               <Button type="submit" className="mb-0 px-5" size="lg">
-                Login
+                Đăng Nhập
               </Button>
               <p className="small fw-bold mt-2 pt-1 mb-2">
-                Don't have an account?{" "}
+                Bạn chưa có tài khoản?{" "}
                 <Link className="link-danger" to="/register">
-                  Register
+                  Đăng Ký
                 </Link>
               </p>
             </div>
           </Form>
         </Col>
       </Row>
+      <ToastContainer />
     </Container>
   );
 };
