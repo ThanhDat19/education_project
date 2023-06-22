@@ -293,9 +293,6 @@
 }
 
 .aboutMeImage {
-  width: 100%;
-  height: 100%;
-  background-color: #051b35;
   border-radius: 50%;
   display: flex;
   align-items: flex-end;

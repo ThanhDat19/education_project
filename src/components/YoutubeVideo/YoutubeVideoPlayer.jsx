@@ -3,13 +3,7 @@ import ReactPlayer from "react-player";
 import AppUrl from "../../api/AppUrl";
 import axios from "axios";
 
-const YoutubeVideoPlayer = ({
-  url,
-  user,
-  lesson,
-  course,
-  updateLesson
-}) => {
+const YoutubeVideoPlayer = ({ url, user, lesson, course, updateLesson }) => {
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -37,6 +31,7 @@ const YoutubeVideoPlayer = ({
   };
 
   const updateLessonOfStudent = async (currentTime) => {
+    console.log(currentTime.toFixed());
     await axios
       .post(AppUrl.updateLessonOfStudent + user.id, {
         lesson_id: lesson,

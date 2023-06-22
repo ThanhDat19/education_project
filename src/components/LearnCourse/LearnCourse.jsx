@@ -11,6 +11,7 @@ import Tabs from "react-bootstrap/Tabs";
 import Quiz from "../Quiz/Quiz";
 import Comment from "../Comment/Comment";
 import YoutubeVideoPlayer from "../YoutubeVideo/YoutubeVideoPlayer";
+import { useSelector } from "react-redux";
 
 const LearnCourse = (props) => {
   const [id] = useState(props.id);
@@ -19,8 +20,9 @@ const LearnCourse = (props) => {
   const [tests, setTests] = useState([]);
   const [selectedLesson, setSelectedLesson] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const user = useSelector((state) => state.auth.user);
 
   const fetchLessonData = async () => {
     RestClient.GetRequest(AppUrl.CourseDetails + id + "/learn")
@@ -33,13 +35,13 @@ const LearnCourse = (props) => {
           // console.log(firstLesson);
           await handleVideoSelect(firstLesson.video_url, firstLesson.id);
         }
-        if (props.user) {
+        if (user) {
           setIsLoggedIn(true);
 
-          setUser(props.user);
+          // setUser(props.user);
         } else {
           setIsLoggedIn(false);
-          setUser(null);
+          // setUser(null);
         }
       })
       .finally(() => {
@@ -70,8 +72,12 @@ const LearnCourse = (props) => {
       // Kiểm tra nếu id của lesson trùng khớp với idLesson
       if (lesson.id === idLesson) {
         const data = lesson.students;
-        if (data[0].watched_video < value) {
-          data[0].watched_video = value;
+        if (
+          data.filter((student) => student.id === user.id)[0].watched_video <
+          value
+        ) {
+          data.filter((student) => student.id === user.id)[0].watched_video =
+            value;
           // Cập nhật giá trị của lesson
           return {
             ...lesson,
@@ -115,7 +121,6 @@ const LearnCourse = (props) => {
   const caculatiorTimeFinish = (video_time, watched_time) => {
     return (watched_time / video_time) * 100;
   };
-
   const myView =
     lessons != null
       ? lessons.map((lesson) => (
@@ -135,7 +140,9 @@ const LearnCourse = (props) => {
                   {"  "}
                   {caculatiorTimeFinish(
                     lesson.video_time,
-                    lesson.students[0].watched_video
+                    lesson.students.filter(
+                      (student) => student.id === user.id
+                    )[0].watched_video
                   ) >= 80
                     ? "Hoàn thành"
                     : "Chưa hoàn thành"}
@@ -176,7 +183,7 @@ const LearnCourse = (props) => {
                 <Tabs defaultActiveKey="comment" id="uncontrolled-tab-example">
                   <Tab eventKey="comment" title="Bình Luận">
                     {/* Phần bình luận */}
-                    <Comment user={user} lesson={selectedLesson}/>
+                    <Comment user={user} lesson={selectedLesson} />
                   </Tab>
                   <Tab eventKey="test" title="Kiểm tra">
                     {tests && <Quiz tests={tests.data} user={user} />}

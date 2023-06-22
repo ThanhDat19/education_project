@@ -13,7 +13,6 @@ import { Fragment } from "react";
 import { Col, Container, Row, Button, Form, Spinner } from "react-bootstrap";
 import { BigPlayButton, Player } from "video-react";
 import YouTube from "react-youtube";
-import RestClient from "../../api/RestClient";
 import AppUrl from "../../api/AppUrl";
 import parse from "html-react-parser";
 import { Link } from "react-router-dom";
@@ -28,7 +27,6 @@ const CourseDetails = (props) => {
   const [id] = useState(props.id);
   const [paidFor, setPaidFor] = useState(false);
   const [error, setError] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const user = useSelector((state) => state.auth.user);
   const [paymentState, setPaymentState] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -52,17 +50,9 @@ const CourseDetails = (props) => {
 
   useEffect(() => {
     async function fetchData() {
-
-      if (user) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-      }
-
       let response;
       if (user) {
         let user_id = user.id;
-        // console.log(user_id);
         response = await axios.post(AppUrl.CourseDetails + id, {
           user_id,
         });
@@ -75,12 +65,10 @@ const CourseDetails = (props) => {
       amount = response.data.data.price;
       courseSate = response.data.status;
       if (courseSate) {
-
         updatePaymentState(true);
       }
     }
     fetchData();
-    // console.log(paymentState);
 
     setLoading(false);
   }, [id]);
@@ -88,9 +76,6 @@ const CourseDetails = (props) => {
   const opts = {
     width: "100%",
     height: "250px",
-    // playerVars: {
-    //   autoplay: 1,
-    // },
   };
 
   const handlePlayerReady = (event) => {
