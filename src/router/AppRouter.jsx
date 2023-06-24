@@ -29,6 +29,7 @@ import EditCoursePage from "../pages/Teacher/EditCoursePage";
 import TestManagementPage from "../pages/Teacher/TestPage";
 import QuestionManagementPage from "../pages/Teacher/Questions";
 import CoursePage from "../pages/Student/CoursePage";
+import StudentManagement from "../pages/Teacher/StudentPage";
 
 const AppRouter = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -128,6 +129,18 @@ const AppRouter = () => {
           element={
             user && user.roles === "teacher" ? (
               <QuestionManagementPage user={user} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+          exact
+        />
+
+        <Route
+          path="/user-management"
+          element={
+            user && user.roles === "teacher" ? (
+              <StudentManagement user={user} />
             ) : (
               <Navigate to="/login" replace />
             )

@@ -54,6 +54,9 @@ class AppUrl {
   static updateQuestion = this.BaseUrl + "/update-questions-teacher/";
   static deleteQuestion = this.BaseUrl + "/delete-questions-teacher/";
 
+  //Students
+  static getListStudent = this.BaseUrl + "/get-users-teacher";
+
   //Lesson student
   static getLessonOfStudent = this.BaseUrl + "/get-lessons-student/";
   static updateLessonOfStudent = this.BaseUrl + "/update-lessons-student/";

@@ -40,9 +40,9 @@ const Analysis = () => {
         <Col lg={6} md={12} sm={12}>
           <ResponsiveContainer>
             <BarChart style={{ width: "100%", height: "300px" }} width={100} height={300} data={data}>
-              <XAxis dataKey="Technology" />
+              <XAxis dataKey="x_data" />
               <Tooltip />
-              <Bar dataKey="Projects" fill={blue}></Bar>
+              <Bar dataKey="y_data" fill={blue}></Bar>
             </BarChart>
           </ResponsiveContainer>
         </Col>

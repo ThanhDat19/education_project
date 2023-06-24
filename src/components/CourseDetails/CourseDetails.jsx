@@ -82,7 +82,7 @@ const CourseDetails = (props) => {
     event.target.playVideo();
   };
 
-  const PayPalView = user ? (
+  const PayPalView = user && user.roles === "student" ? (
     !paymentState ? (
       <PayPalScriptProvider
         options={{
@@ -158,13 +158,13 @@ const CourseDetails = (props) => {
         />
       </PayPalScriptProvider>
     ) : (
-      <Link className="btn btn-primary" to={`/course-details/${id}/learn`}>
+      <Link className="btn btn-primary p-4" to={`/course-details/${id}/learn`}>
         {" "}
-        Go to your course
+        Đi tới khóa học của bạn
       </Link>
     )
   ) : (
-    "Hãy đăng nhập để mua khóa học"
+    "Hãy đăng nhập (Tài khoản học viên)"
   );
   return loading ? (
     <Spinner animation="border" role="status">
@@ -188,7 +188,7 @@ const CourseDetails = (props) => {
           </Col>
           <Col lg={4} md={6} sm={12}>
             <YouTube
-              videoId={course.video_course}
+              videoId={'KcQoJS9R6Lk'}
               opts={opts}
               onReady={handlePlayerReady}
             />

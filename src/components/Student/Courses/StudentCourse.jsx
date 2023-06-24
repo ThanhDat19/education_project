@@ -19,6 +19,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import SweetAlert from "react-bootstrap-sweetalert";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ProgressBar } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const StudentCourse = ({ user }) => {
   const [allCourses, setAllCourses] = useState([]);
@@ -146,12 +148,14 @@ const StudentCourse = ({ user }) => {
             >
               Xem chi tiết
             </Link>
-            <h5>
-              {" "}
-              {(item.status_course / item.lessons) * 100 === 100
-                ? "Hoàn thành"
-                : "Tiến độ : " + (item.status_course / item.lessons) * 100 + "%"}
-            </h5>
+            <div className="progressBar mt-2">
+              <ProgressBar
+                now={(item.status_course / item.lessons) * 100}
+                label={`${Math.ceil(
+                  (item.status_course / item.lessons) * 100
+                )}% hoàn thành`}
+              />
+            </div>
           </Card.Body>
         </Card>
       </Col>

@@ -151,6 +151,13 @@ const TopNavigation = () => {
                       >
                         Câu hỏi và Lựa chọn
                       </NavDropdown.Item>
+                      <NavDropdown.Item
+                        className={navBarItem}
+                        as={Link}
+                        to="/user-management"
+                      >
+                        Học viên
+                      </NavDropdown.Item>
                       <NavDropdown.Divider />
                       <NavDropdown.Item
                         title={userName}
