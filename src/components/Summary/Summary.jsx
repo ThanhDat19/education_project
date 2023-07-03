@@ -24,29 +24,29 @@ const Summary = () => {
                   <Col className="text-center">
                     <FontAwesomeIcon className="iconProject" icon={faGlobe} />
                     <h1 className="countNumber">
-                      <CountUp start={0} end={35000} delay={0}>
+                      <CountUp start={0} end={20} delay={0}>
                         {({ countUpRef }) => <span ref={countUpRef} />}
                       </CountUp>
                     </h1>
-                    <h4 className="countTitle">Students Worldwide</h4>
+                    <h4 className="countTitle">Học viên</h4>
                   </Col>
                   <Col>
                     <FontAwesomeIcon className="iconProject" icon={faLaptop} />
                     <h1 className="countNumber">
-                      <CountUp start={0} end={22} delay={0}>
+                      <CountUp start={0} end={10} delay={0}>
                         {({ countUpRef }) => <span ref={countUpRef} />}
                       </CountUp>
                     </h1>
-                    <h4 className="countTitle">Courses Published</h4>
+                    <h4 className="countTitle">Khóa học</h4>
                   </Col>
                   <Col>
                     <FontAwesomeIcon className="iconProject" icon={faStar} />
                     <h1 className="countNumber">
-                      <CountUp start={0} end={3000} delay={0}>
+                      <CountUp start={0} end={7} delay={0}>
                         {({ countUpRef }) => <span ref={countUpRef} />}
                       </CountUp>
                     </h1>
-                    <h4 className="countTitle">Students Reviews</h4>
+                    <h4 className="countTitle">Lượt đánh giá</h4>
                   </Col>
                 </Row>
               </Col>
@@ -55,7 +55,7 @@ const Summary = () => {
                 <Card className="workCard">
                   <Card.Body>
                     <Card.Title className="cardTitle">
-                      What I Have Achieved
+                      Bạn có thể đạt được những gì?
                     </Card.Title>
                     <Card.Text>
                       <div className="cardSubTitle">
@@ -63,31 +63,31 @@ const Summary = () => {
                           className="iconBullent"
                           icon={faCheckSquare}
                         />{" "}
-                        Requirment Gathering
+                        Kỹ năng phân tích yêu cầu
                       </div>
                       <div className="cardSubTitle">
                         <FontAwesomeIcon
                           className="iconBullent"
                           icon={faCheckSquare}
                         />{" "}
-                        System Analysis
+                        Kỹ năng phân tích hệ thống
                       </div>
                       <div className="cardSubTitle">
                         <FontAwesomeIcon
                           className="iconBullent"
                           icon={faCheckSquare}
                         />{" "}
-                        Codeing Testing
+                        Kỹ năng lập trình và kiểm thử
                       </div>
                       <div className="cardSubTitle">
                         <FontAwesomeIcon
                           className="iconBullent"
                           icon={faCheckSquare}
                         />{" "}
-                        Implementation
+                        Hiện thực dự án
                       </div>
                     </Card.Text>
-                    <Button variant="primary">Go somewhere</Button>
+                    {/* <Button variant="primary">Go somewhere</Button> */}
                   </Card.Body>
                 </Card>
               </Col>

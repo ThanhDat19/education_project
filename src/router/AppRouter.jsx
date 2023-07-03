@@ -80,7 +80,7 @@ const AppRouter = () => {
         <Route
           path="/course-details/:id/learn"
           element={
-            user && user.roles === "student" ? (
+            user ? (
               <LearnCoursePage user={user} />
             ) : (
               <Navigate to="/login" replace />

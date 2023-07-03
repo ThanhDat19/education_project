@@ -76,7 +76,7 @@ const TeacherMangeStudent = ({ user }) => {
         selectedCategory === "" ||
         student.course_category_id == selectedCategory;
 
-      console.log(student.course_id, selectedCourse);
+      // console.log(student.course_id, selectedCourse);
       const isMatchedCourse =
         selectedCourse === "" || student.course_id == selectedCourse;
 
@@ -125,7 +125,7 @@ const TeacherMangeStudent = ({ user }) => {
       {
         name: "Tiến độ",
         selector: (row) =>
-          (row.lessons / row.status_course) * 100 !== Infinity
+          ((row.lessons / row.status_course) * 100 !== Infinity) && (row.lessons)
             ? (row.lessons / row.status_course) * 100 + "%"
             : "Chưa hoàn thành",
         sortable: true,

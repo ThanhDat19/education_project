@@ -8,7 +8,7 @@ const AboutMe = () => {
   return (
     <Fragment>
       <Container className="text-center">
-        <h1 className="reviewMainTitle">ABOUT ME</h1>
+        <h1 className="reviewMainTitle">THÔNG TIN VỀ TÔI</h1>
         <div className="reviewbottom"></div>
         <Row>
           <Col lg={6} md={6} sm={12}>
@@ -18,10 +18,10 @@ const AboutMe = () => {
           </Col>
           <Col lg={6} md={6} sm={12}>
             <div className="aboutMeBody">
-              <h2 className="aboutMeDeTails">HI There, I'm</h2>
-              <h2 className="aboutMeTitle">Nguyen Thanh Dat</h2>
+              <h2 className="aboutMeDeTails">Xin chào, tôi là</h2>
+              <h2 className="aboutMeTitle">Nguyễn Thành Đạt</h2>
               <h3 className="aboutMeDeTails">
-                Work as{" "}
+                Là một{" "}
                 <Typewriter
                   className="d-inline"
                   options={{

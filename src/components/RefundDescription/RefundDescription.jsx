@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
-import RestClient from "../../api/RestClient";
+import { Col, Container, Row, Spinner } from "react-bootstrap";
 import AppUrl from "../../api/AppUrl";
-import parse from 'html-react-parser';
+import parse from "html-react-parser";
+import axios from "axios";
 
 const RefundDescription = () => {
-  const [refundDesc, setRefundDesc] = useState("...");
+  const [refundDescription, setRefundDescription] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     try {
-      RestClient.GetRequest(AppUrl.Information).then((result) => {
-        setRefundDesc(result[0]['refund']);
+      axios.get(AppUrl.Information).then((response) => {
+        console.log(response.data);
+        setRefundDescription(response.data[0].refund);
+        setIsLoading(false);
       });
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
   }, []);
 
@@ -21,7 +25,14 @@ const RefundDescription = () => {
     <Container className="mt-5">
       <Row>
         <Col lg={12} md={12} sm={12}>
-          {parse(refundDesc)}
+          {isLoading ? (
+            <div className="text-center">
+              <Spinner animation="border" variant="primary" />
+              <p>Loading...</p>
+            </div>
+          ) : (
+            parse(refundDescription)
+          )}
         </Col>
       </Row>
     </Container>

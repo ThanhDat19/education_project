@@ -12,7 +12,7 @@ const RefundPage = () => {
   return (
     <Fragment> 
       <TopNavigation />
-      <PageTop pageTitle="Refund Policy" />
+      <PageTop pageTitle="Chính Sách Hoàn Trả" />
       <RefundDescription />
       <Footer />
     </Fragment>

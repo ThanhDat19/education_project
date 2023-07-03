@@ -48,7 +48,7 @@ const Footer = () => {
       <Container fluid={true} className="footerSection">
         <Row>
           <Col lg={3} md={6} sm={12} className="p-5 text-center">
-            <h2 className="footerName text-center">Follow Us</h2>
+            <h2 className="footerName text-center">Theo dõi chúng tôi</h2>
             <div className="social-container">
               <a className="youtube social" href={youtube}>
                 <FontAwesomeIcon icon={faYoutube} size="2x" />
@@ -63,29 +63,28 @@ const Footer = () => {
           </Col>
 
           <Col lg={3} md={6} sm={12} className="p-5 text-justify">
-            <h2 className="footerName text-center">Address</h2>
+            <h2 className="footerName text-center">Địa chỉ</h2>
             <p className="footerDescription">
               {address}
               <br></br>
               <FontAwesomeIcon icon={faEnvelope} /> Email: {email}
               <br></br>
-              <FontAwesomeIcon icon={faPhone} /> Phone: {phone}{" "}
-              <br></br>
+              <FontAwesomeIcon icon={faPhone} /> Phone: {phone} <br></br>
             </p>
           </Col>
 
           <Col lg={3} md={6} sm={12} className="p-5 text-justify">
-            <h2 className="footerName ">Information</h2>
+            <h2 className="footerName ">Thông tin</h2>
             <Link className="footerLink" to="/about">
-              About Me
+              Thông tin về tôi
             </Link>
             <br></br>
             <Link className="footerLink" to="/about">
-              Company Profile
+              Thông tin về cty
             </Link>
             <br></br>
             <Link className="footerLink" to="/contact">
-              Contact Us
+              Liên hệ
             </Link>
             <br></br>
           </Col>
@@ -93,15 +92,15 @@ const Footer = () => {
           <Col lg={3} md={6} sm={12} className="p-5 text-justify">
             <h2 className="footerName ">Policy</h2>
             <Link className="footerLink" to="/refund">
-              Refund Policy
+              Chính sách hoàn trả
             </Link>
             <br></br>
             <Link className="footerLink" to="/trems">
-              Trems And Condition
+              Điều khoản và điều kiện
             </Link>
             <br></br>
             <Link className="footerLink" to="/privacy">
-              Privaci Policy
+              Chính sách bảo mật
             </Link>
             <br></br>
           </Col>

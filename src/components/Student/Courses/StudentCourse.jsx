@@ -141,7 +141,7 @@ const StudentCourse = ({ user }) => {
           <Card.Body>
             <Card.Title>{item.title}</Card.Title>
             <Card.Text>{parse(item.description)}</Card.Text>
-            <Card.Text>$ {item.price}</Card.Text>
+            <Card.Text className="courseViewMore">${item.price}</Card.Text>
             <Link
               to={"/course-details/" + item.course_id}
               className="float-left courseViewMore"
@@ -149,12 +149,16 @@ const StudentCourse = ({ user }) => {
               Xem chi tiết
             </Link>
             <div className="progressBar mt-2">
-              <ProgressBar
-                now={(item.status_course / item.lessons) * 100}
-                label={`${Math.ceil(
-                  (item.status_course / item.lessons) * 100
-                )}% hoàn thành`}
-              />
+              {item.lessons && item.status_course ? (
+                <ProgressBar
+                  now={(item.status_course / item.lessons) * 100}
+                  label={`${Math.ceil(
+                    (item.status_course / item.lessons) * 100
+                  )}% hoàn thành`}
+                />
+              ) : (
+                "Chưa học"
+              )}
             </div>
           </Card.Body>
         </Card>

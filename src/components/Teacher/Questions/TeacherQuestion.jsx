@@ -17,6 +17,8 @@ import AppUrl from "../../../api/AppUrl";
 import SweetAlert from "react-bootstrap-sweetalert";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCancel, faCheck, faStickyNote, faTicket } from "@fortawesome/free-solid-svg-icons";
 
 const TeacherQuestion = ({ user }) => {
   const [questions, setQuestions] = useState([]);
@@ -551,7 +553,21 @@ const TeacherQuestion = ({ user }) => {
               <td>{item.question}</td>
               <td>{item.question_type_id}</td>
               <td>{item.score}</td>
-              <td>{item.multi_answer}</td>
+              <td style={{ textAlign: "center" }}>
+                {item.multi_answer === 1 ? (
+                  <FontAwesomeIcon
+                    className="iconBullent"
+                    style={{ color: "green" }}
+                    icon={faCheck}
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    className="iconBullent"
+                    style={{ color: "red" }}
+                    icon={faCancel}
+                  />
+                )}
+              </td>
               <td>
                 <Button
                   variant="outline-info"

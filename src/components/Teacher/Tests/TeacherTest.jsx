@@ -62,6 +62,7 @@ const TeacherTest = ({ user }) => {
       if (response.data.questions) {
         console.log(response.data.questions);
         setAllQuestions(response.data.questions.data);
+        console.log(response.data.questions.data)
         setQuestionTypes(response.data.questionTypes);
         setTotalQuestionPages(response.data.total_pages);
       }
@@ -163,7 +164,7 @@ const TeacherTest = ({ user }) => {
         if (!questionType) {
           return null;
         }
-
+        console.log('edit type',editTestType)
         return (
           <tr key={question.id}>
             <td>{index + 1}</td>
@@ -191,7 +192,6 @@ const TeacherTest = ({ user }) => {
   };
 
   const handleUpdateTest = async () => {
-    console.log(selectedQuestions);
     try {
       const response = await axios.put(AppUrl.UpdateTest + editTestId, {
         title: editTestTitle,
@@ -334,7 +334,6 @@ const TeacherTest = ({ user }) => {
     if (!course) {
       return null;
     }
-
     return (
       <>
         <option value="">Tất cả</option>

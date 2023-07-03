@@ -142,6 +142,7 @@ const Quiz = ({ tests, user, lesson }) => {
     </>
   );
 
+  console.log("test", tests);
   return (
     <div>
       <h1>{tests ? tests.title : ""}</h1>
@@ -154,6 +155,16 @@ const Quiz = ({ tests, user, lesson }) => {
               <Card key={question.id} className="mb-4">
                 <Card.Body>
                   <Card.Title>{question.question}</Card.Title>
+                  {question.question_image ? (
+                    <Card.Img
+                      variant="top"
+                      src={"http://127.0.0.1:8000" + question.question_image}
+                      style={{ width: "40%" }}
+                    />
+                  ) : (
+                    ""
+                  )}
+
                   <Form.Group>
                     {question.options.map((option) => (
                       <Form.Check

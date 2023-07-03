@@ -108,7 +108,7 @@ const Courses = () => {
           <Card.Body>
             <Card.Title>{item.title}</Card.Title>
             <Card.Text>{parse(item.description)}</Card.Text>
-            <Card.Text>$ {item.price}</Card.Text>
+            <Card.Text className="courseViewMore">${item.price}</Card.Text>
             <Link
               to={"/course-details/" + item.id}
               className="float-left courseViewMore"

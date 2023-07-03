@@ -201,7 +201,6 @@ const Comment = ({ user, lesson }) => {
   return (
     <div>
       <h3 className="mt-2">Bình Luận</h3>
-      <ListGroup>{commentView}</ListGroup>
       <Form onSubmit={handleSubmit} className="mt-4">
         <Form.Group>
           <InputGroup>
@@ -218,6 +217,9 @@ const Comment = ({ user, lesson }) => {
           Xác nhận
         </Button>
       </Form>
+      <ListGroup className="overflow-auto" style={{ height: "400px" }}>
+        {commentView}
+      </ListGroup>
     </div>
   );
 };

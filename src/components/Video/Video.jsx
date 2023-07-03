@@ -32,7 +32,7 @@ const Video = () => {
   return (
     <Fragment>
       <Container className="text-center">
-        <h1 className="serviceMainTitle">OUR VIDEOS</h1>
+        <h1 className="serviceMainTitle">VIDEO GIỚI THIỆU</h1>
         <div className="bottom"></div>
         <Row>
           <Col lg={6} md={6} sm={12} className="videoText text-justify">

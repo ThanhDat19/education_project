@@ -12,7 +12,7 @@ const TremsPage = () => {
   return (
     <Fragment>
       <TopNavigation />
-      <PageTop pageTitle="Terms And Conditions" />
+      <PageTop pageTitle="Điểu khoản và Điều kiện" />
       <TremsDescription />
       <Footer />
     </Fragment>

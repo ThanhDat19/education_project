@@ -72,17 +72,24 @@ const LearnCourse = (props) => {
       // Kiểm tra nếu id của lesson trùng khớp với idLesson
       if (lesson.id === idLesson) {
         const data = lesson.students;
-        if (
-          data.filter((student) => student.id === user.id)[0].watched_video <
-          value
-        ) {
-          data.filter((student) => student.id === user.id)[0].watched_video =
-            value;
-          // Cập nhật giá trị của lesson
-          return {
-            ...lesson,
-            students: data,
-          };
+        console.log(data.filter((student) => student.id === user.id)[0]);
+        if (data.filter((student) => student.id === user.id)[0]) {
+          if (
+            data.filter((student) => student.id === user.id)[0].watched_video <
+            value
+          ) {
+            data.filter((student) => student.id === user.id)[0].watched_video =
+              value;
+            const percent = (value / lesson.video_time) * 100;
+            if (percent >= 80) {
+              data.filter((student) => student.id === user.id)[0].lesson_status = 1;
+            }
+            // Cập nhật giá trị của lesson
+            return {
+              ...lesson,
+              students: data,
+            };
+          }
         }
       }
       // Trả về lesson không thay đổi
@@ -117,14 +124,12 @@ const LearnCourse = (props) => {
 
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
   };
-
-  const caculatiorTimeFinish = (video_time, watched_time) => {
-    return (watched_time / video_time) * 100;
-  };
+  console.log(lessons);
   const myView =
     lessons != null
       ? lessons.map((lesson) => (
           <ListGroup.Item
+            
             key={lesson.id}
             onClick={() => handleVideoSelect(lesson.video_url, lesson.id)}
             action
@@ -138,12 +143,11 @@ const LearnCourse = (props) => {
                   <FontAwesomeIcon icon={faPlay} />{" "}
                   {formatTime(lesson.video_time)}
                   {"  "}
-                  {caculatiorTimeFinish(
-                    lesson.video_time,
-                    lesson.students.filter(
-                      (student) => student.id === user.id
-                    )[0].watched_video
-                  ) >= 80
+                  {lesson.students.filter(
+                    (student) => student.id === user.id
+                  )[0] &&
+                  lesson.students.filter((student) => student.id === user.id)[0]
+                    .lesson_status === 1
                     ? "Hoàn thành"
                     : "Chưa hoàn thành"}
                 </Card.Text>
@@ -171,7 +175,7 @@ const LearnCourse = (props) => {
                     Nội dung khóa học
                   </h4>
                   <hr />
-                  <ListGroup>{myView}</ListGroup>
+                  <ListGroup className="overflow-auto" style={{ height: "400px" }}>{myView}</ListGroup>
                 </div>
               </Col>
             </Row>
@@ -186,7 +190,11 @@ const LearnCourse = (props) => {
                     <Comment user={user} lesson={selectedLesson} />
                   </Tab>
                   <Tab eventKey="test" title="Kiểm tra">
-                    {tests && <Quiz tests={tests.data} user={user} />}
+                    {tests && user.role === "student" ? (
+                      <Quiz tests={tests.data} user={user} />
+                    ) : (
+                      ""
+                    )}
                   </Tab>
                 </Tabs>
               </Col>

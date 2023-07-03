@@ -12,7 +12,7 @@ const PrivacyPage = () => {
   return (
     <Fragment>
       <TopNavigation />
-      <PageTop pageTitle="Privacy Policy" />
+      <PageTop pageTitle="Chính Sách Bảo Mật" />
       <PrivacyDescription />
       <Footer />
     </Fragment>

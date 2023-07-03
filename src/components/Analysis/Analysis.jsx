@@ -34,7 +34,7 @@ const Analysis = () => {
 
   return (
     <Container>
-      <h1 className="serviceMainTitle text-center">TECHNOLOGY USED</h1>
+      <h1 className="serviceMainTitle text-center">CÔNG NGHỆ SỬ DỤNG</h1>
       <div className="bottom"></div>
       <Row>
         <Col lg={6} md={12} sm={12}>

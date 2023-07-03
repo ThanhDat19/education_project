@@ -44,7 +44,7 @@ const Courses = () => {
   return (
     <Fragment>
       <Container className="text-center">
-        <h1 className="serviceMainTitle">MY COURSES</h1>
+        <h1 className="serviceMainTitle">KHÓA HỌC</h1>
         <div className="bottom"></div>
         <Row>{myView}</Row>
       </Container>

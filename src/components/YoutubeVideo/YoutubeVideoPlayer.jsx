@@ -18,34 +18,38 @@ const YoutubeVideoPlayer = ({ url, user, lesson, course, updateLesson }) => {
   }, [url]);
 
   const checkLessonCompletion = () => {
-    // Code to check if the lesson is completed in the database or make an API call
-    axios
-      .post(AppUrl.getLessonOfStudent + user.id, {
-        lesson_id: lesson,
-        course_id: course,
-      })
-      .then(function (response) {})
-      .catch(function (error) {
-        console.log(error);
-      });
+    if (user.roles === "student") {
+      // Code to check if the lesson is completed in the database or make an API call
+      axios
+        .post(AppUrl.getLessonOfStudent + user.id, {
+          lesson_id: lesson,
+          course_id: course,
+        })
+        .then(function (response) {})
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
   };
 
   const updateLessonOfStudent = async (currentTime) => {
-    console.log(currentTime.toFixed());
-    await axios
-      .post(AppUrl.updateLessonOfStudent + user.id, {
-        lesson_id: lesson,
-        course_id: course,
-        current_time: currentTime.toFixed(),
-      })
-      .then(function (response) {
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    if (user.roles === "student") {
+      console.log(currentTime.toFixed());
+      await axios
+        .post(AppUrl.updateLessonOfStudent + user.id, {
+          lesson_id: lesson,
+          course_id: course,
+          current_time: currentTime.toFixed(),
+        })
+        .then(function (response) {
+          console.log(response.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
 
-    updateLesson(lesson, duration);
+      updateLesson(lesson, duration);
+    }
   };
   const handleProgress = (progress) => {
     setDuration(progress.loadedSeconds);
