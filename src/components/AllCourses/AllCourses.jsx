@@ -102,12 +102,12 @@ const Courses = () => {
         <Card border="light" style={{ margin: "4px" }}>
           <Card.Img
             variant="top"
-            src={"http://127.0.0.1:8000" + item.course_image}
+            src={"http://hoctaptructuyen.edu.vn" + item.course_image}
             alt={item.title}
           />
           <Card.Body>
             <Card.Title>{item.title}</Card.Title>
-            <Card.Text>{parse(item.description)}</Card.Text>
+            {/* <Card.Text>{parse(item.description)}</Card.Text> */}
             <Card.Text className="courseViewMore">${item.price}</Card.Text>
             <Link
               to={"/course-details/" + item.id}

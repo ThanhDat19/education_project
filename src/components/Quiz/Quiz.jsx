@@ -158,7 +158,7 @@ const Quiz = ({ tests, user, lesson }) => {
                   {question.question_image ? (
                     <Card.Img
                       variant="top"
-                      src={"http://127.0.0.1:8000" + question.question_image}
+                      src={"http://hoctaptructuyen.edu.vn" + question.question_image}
                       style={{ width: "40%" }}
                     />
                   ) : (

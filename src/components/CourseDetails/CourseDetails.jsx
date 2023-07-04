@@ -196,7 +196,7 @@ const CourseDetails = (props) => {
           <Col lg={8} md={6} sm={12}>
             <h1 className="courseDetailsText">{course.title}</h1>
             <img
-              src={"http://127.0.0.1:8000" + course.course_image}
+              src={"http://hoctaptructuyen.edu.vn" + course.course_image}
               className="courseDetailsImg"
             />
             <br />
@@ -214,37 +214,40 @@ const CourseDetails = (props) => {
             <div className="widget_feature">
               <h4 className="widget-title text-center">Thông Tin Khóa Học</h4>
               <hr />
-              <ul>
-                <li>
-                  <FontAwesomeIcon icon={faUsers} />
-                  <span>Tổng học viên :</span>{" "}
-                  {course.studentCount ? course.studentCount : 0} học viên
-                </li>
-                <li>
-                  <FontAwesomeIcon icon={faClock} />
-                  <span>Thời lượng bài giảng:</span>{" "}
-                  {course.lessonTimeCount
-                    ? formatTime(course.lessonTimeCount)
-                    : "0 giờ"}
-                </li>
-                <li>
-                  <FontAwesomeIcon icon={faClipboard} />
-                  <span>Bài giảng :</span>{" "}
-                  {course.lessonCount ? course.lessonCount : 0}
-                </li>
-                <li>
-                  <FontAwesomeIcon icon={faClone} />
-                  <span>Loại khóa học:</span> {course.category.name}
-                </li>
-                <li>
-                  <FontAwesomeIcon icon={faTags} />
-                  <span>Lĩnh vực:</span> {course.type ? course.type.name : ""}
-                </li>
-                <li>
-                  <FontAwesomeIcon icon={faUser} />
-                  <span>Giảng viên:</span> {course.instructor.name}
-                </li>
-              </ul>
+              {course && (
+                <ul>
+                  <li>
+                    <FontAwesomeIcon icon={faUsers} />
+                    <span>Tổng học viên :</span>{" "}
+                    {course.studentCount ? course.studentCount : 0} học viên
+                  </li>
+                  <li>
+                    <FontAwesomeIcon icon={faClock} />
+                    <span>Thời lượng bài giảng:</span>{" "}
+                    {course.lessonTimeCount
+                      ? formatTime(course.lessonTimeCount)
+                      : "0 giờ"}
+                  </li>
+                  <li>
+                    <FontAwesomeIcon icon={faClipboard} />
+                    <span>Bài giảng :</span>{" "}
+                    {course.lessonCount ? course.lessonCount : 0}
+                  </li>
+                  <li>
+                    <FontAwesomeIcon icon={faClone} />
+                    <span>Loại khóa học:</span> {course.category.name}
+                  </li>
+                  <li>
+                    <FontAwesomeIcon icon={faTags} />
+                    <span>Lĩnh vực:</span> {course.type ? course.type.name : ""}
+                  </li>
+                  <li>
+                    <FontAwesomeIcon icon={faUser} />
+                    <span>Giảng viên:</span> {course.instructor.name}
+                  </li>
+                </ul>
+              )}
+
               <div className="price-wrap text-center">
                 <h5>
                   Giá Bán:<span> ${course.price}</span>

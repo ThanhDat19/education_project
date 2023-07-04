@@ -140,7 +140,8 @@ const StudentCourse = ({ user }) => {
           />
           <Card.Body>
             <Card.Title>{item.title}</Card.Title>
-            <Card.Text>{parse(item.description)}</Card.Text>
+            {/* <Card.Text>{
+              parse(item.description)}</Card.Text> */}
             <Card.Text className="courseViewMore">${item.price}</Card.Text>
             <Link
               to={"/course-details/" + item.course_id}

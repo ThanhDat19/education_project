@@ -1,5 +1,5 @@
 class AppUrl {
-  static BaseUrl = "http://127.0.0.1:8000/api";
+  static BaseUrl = "http://hoctaptructuyen.edu.vn/api";
   // Home url
   static HomeTopTitle = this.BaseUrl + "/home/title";
   static HomeTechnical = this.BaseUrl + "/home/technical";

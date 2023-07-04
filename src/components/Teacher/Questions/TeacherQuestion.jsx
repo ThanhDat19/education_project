@@ -433,7 +433,7 @@ const TeacherQuestion = ({ user }) => {
         {(imagePreview || question.question_image) && (
           <img
             src={
-              imagePreview || "http://127.0.0.1:8000" + question.question_image
+              imagePreview || "http://hoctaptructuyen.edu.vn" + question.question_image
             }
             alt="Preview"
             style={{ marginTop: "10px", maxWidth: "400px" }}
@@ -491,7 +491,7 @@ const TeacherQuestion = ({ user }) => {
           {question.question_image && (
             <img
               style={{ width: "100%" }}
-              src={"http://127.0.0.1:8000" + question.question_image}
+              src={"http://hoctaptructuyen.edu.vn" + question.question_image}
               alt="Question Image"
             />
           )}
