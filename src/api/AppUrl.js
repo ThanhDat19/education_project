@@ -1,5 +1,5 @@
 class AppUrl {
-  static BaseUrl = "http://hoctaptructuyen.edu.vn/api";
+  static BaseUrl = "http://127.0.0.1:8000/api";
   // Home url
   static HomeTopTitle = this.BaseUrl + "/home/title";
   static HomeTechnical = this.BaseUrl + "/home/technical";
@@ -13,6 +13,7 @@ class AppUrl {
   static Services = this.BaseUrl + "/services";
   // Information url
   static Information = this.BaseUrl + "/information";
+  static UpdateInformation=this.BaseUrl+"/update-information/";
   // Footer url
   static FooterData = this.BaseUrl + "/footer-data";
   // Course url
@@ -33,6 +34,7 @@ class AppUrl {
   //Authentication
   static Login = this.BaseUrl + "/login";
   static getUserLogin = this.BaseUrl + "/user-login";
+  static Register = this.BaseUrl + "/register";
 
   //Teacher
   //Course

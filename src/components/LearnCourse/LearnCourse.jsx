@@ -66,23 +66,27 @@ const LearnCourse = (props) => {
     setSelectedLesson(id);
   };
 
-  const updateLesson = (idLesson, value) => {
+  const updateLesson = (value) => {
     // Duyệt qua từng phần tử trong danh sách lessons
     const updatedLessons = lessons.map((lesson) => {
       // Kiểm tra nếu id của lesson trùng khớp với idLesson
-      if (lesson.id === idLesson) {
+      if (lesson.id == selectedLesson) {
         const data = lesson.students;
-        console.log(data.filter((student) => student.id === user.id)[0]);
-        if (data.filter((student) => student.id === user.id)[0]) {
+        console.log(data);
+        console.log("data", data.filter((student) => student.id == user.id)[0]);
+
+        if (data.filter((student) => student.id == user.id)[0]) {
           if (
-            data.filter((student) => student.id === user.id)[0].watched_video <
+            data.filter((student) => student.id == user.id)[0].watched_video <
             value
           ) {
-            data.filter((student) => student.id === user.id)[0].watched_video =
+            data.filter((student) => student.id == user.id)[0].watched_video =
               value;
             const percent = (value / lesson.video_time) * 100;
             if (percent >= 80) {
-              data.filter((student) => student.id === user.id)[0].lesson_status = 1;
+              data.filter(
+                (student) => student.id == user.id
+              )[0].lesson_status = 1;
             }
             // Cập nhật giá trị của lesson
             return {
@@ -92,6 +96,7 @@ const LearnCourse = (props) => {
           }
         }
       }
+
       // Trả về lesson không thay đổi
       return lesson;
     });
@@ -124,12 +129,11 @@ const LearnCourse = (props) => {
 
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
   };
-  console.log(lessons);
+  // console.log(lessons);
   const myView =
     lessons != null
       ? lessons.map((lesson) => (
           <ListGroup.Item
-            
             key={lesson.id}
             onClick={() => handleVideoSelect(lesson.video_url, lesson.id)}
             action
@@ -156,6 +160,7 @@ const LearnCourse = (props) => {
           </ListGroup.Item>
         ))
       : "No data";
+  console.log(tests);
   return (
     <>
       {isLoading ? ( // Kiểm tra trạng thái tải
@@ -175,7 +180,12 @@ const LearnCourse = (props) => {
                     Nội dung khóa học
                   </h4>
                   <hr />
-                  <ListGroup className="overflow-auto" style={{ height: "400px" }}>{myView}</ListGroup>
+                  <ListGroup
+                    className="overflow-auto"
+                    style={{ height: "400px" }}
+                  >
+                    {myView}
+                  </ListGroup>
                 </div>
               </Col>
             </Row>
@@ -190,11 +200,7 @@ const LearnCourse = (props) => {
                     <Comment user={user} lesson={selectedLesson} />
                   </Tab>
                   <Tab eventKey="test" title="Kiểm tra">
-                    {tests && user.role === "student" ? (
-                      <Quiz tests={tests.data} user={user} />
-                    ) : (
-                      ""
-                    )}
+                    {tests ? <Quiz tests={tests.data} user={user} /> : ""}
                   </Tab>
                 </Tabs>
               </Col>

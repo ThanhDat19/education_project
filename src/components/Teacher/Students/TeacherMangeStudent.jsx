@@ -125,8 +125,8 @@ const TeacherMangeStudent = ({ user }) => {
       {
         name: "Tiến độ",
         selector: (row) =>
-          ((row.lessons / row.status_course) * 100 !== Infinity) && (row.lessons)
-            ? (row.lessons / row.status_course) * 100 + "%"
+          ((row.status_course / row.lessons) * 100 !== Infinity) && (row.lessons)
+            ? (row.status_course / row.lessons) * 100 + "%"
             : "Chưa hoàn thành",
         sortable: true,
       },

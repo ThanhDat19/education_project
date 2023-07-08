@@ -18,7 +18,12 @@ import SweetAlert from "react-bootstrap-sweetalert";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCancel, faCheck, faStickyNote, faTicket } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCancel,
+  faCheck,
+  faStickyNote,
+  faTicket,
+} from "@fortawesome/free-solid-svg-icons";
 
 const TeacherQuestion = ({ user }) => {
   const [questions, setQuestions] = useState([]);
@@ -88,6 +93,7 @@ const TeacherQuestion = ({ user }) => {
       }
 
       // Gửi yêu cầu thêm câu hỏi mới lên server
+      console.log(newQuestion.multi_answer);
       const formData = new FormData();
       formData.append("question", newQuestion.question);
       formData.append("question_type_id", newQuestion.question_type_id);
@@ -191,7 +197,7 @@ const TeacherQuestion = ({ user }) => {
       const score =
         newQuestion.score !== 0 ? newQuestion.score : question.score;
       const multiAnswer =
-        newQuestion.multi_answer !== false
+        newQuestion.multi_answer != false
           ? newQuestion.multi_answer
           : question.multi_answer;
       const image = newQuestion.image;
@@ -228,7 +234,6 @@ const TeacherQuestion = ({ user }) => {
         // Cập nhật danh sách câu hỏi bằng cách gọi lại API hoặc thực hiện các bước khác cần thiết để cập nhật danh sách câu hỏi
         handleCloseEditQuestionModal();
         // Hiển thị thông báo thành công
-        // alert("Chỉnh sửa câu hỏi thành công!");
         toast.success("Chỉnh sửa câu hỏi thành công!");
       } else {
         // Hiển thị thông báo lỗi nếu chỉnh sửa câu hỏi không thành công
@@ -355,6 +360,7 @@ const TeacherQuestion = ({ user }) => {
   };
 
   const multiAnswerChange = (checked) => {
+    console.log(checked);
     setNewQuestion({
       ...newQuestion,
       multi_answer: checked,
@@ -433,7 +439,7 @@ const TeacherQuestion = ({ user }) => {
         {(imagePreview || question.question_image) && (
           <img
             src={
-              imagePreview || "http://hoctaptructuyen.edu.vn" + question.question_image
+              imagePreview || "http://127.0.0.1:8000" + question.question_image
             }
             alt="Preview"
             style={{ marginTop: "10px", maxWidth: "400px" }}
@@ -491,7 +497,7 @@ const TeacherQuestion = ({ user }) => {
           {question.question_image && (
             <img
               style={{ width: "100%" }}
-              src={"http://hoctaptructuyen.edu.vn" + question.question_image}
+              src={"http://127.0.0.1:8000" + question.question_image}
               alt="Question Image"
             />
           )}

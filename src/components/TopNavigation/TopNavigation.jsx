@@ -10,6 +10,8 @@ import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { logout } from "../../redux/actions/authActions";
 import { useDispatch } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserAlt } from "@fortawesome/free-solid-svg-icons";
 
 const TopNavigation = () => {
   const [navBarTitle, setNavBarTitle] = useState("navTitle");
@@ -162,13 +164,7 @@ const TopNavigation = () => {
                       <NavDropdown.Item
                         title={userName}
                         className={navBarItem}
-                        href="#action/3.4"
-                      >
-                        {userName}
-                        {/* <Nav.Link>
-                        <span className={navBarItem}>{userName}</span>
-                      </Nav.Link> */}
-                      </NavDropdown.Item>
+                      ></NavDropdown.Item>
                     </NavDropdown>
                   ) : (
                     ""
@@ -196,6 +192,17 @@ const TopNavigation = () => {
                       onClick={handleLogout}
                     >
                       ĐĂNG XUẤT
+                    </NavLink>
+                    <NavLink
+                      activeclassname="menu_active"
+                      className={navBarItem}
+                      to="/update-information"
+                    >
+                      <FontAwesomeIcon
+                        className="navBarItem"
+                        style={{ marginLeft: "8px" , fontSize: "14px"}}
+                        icon={faUserAlt}
+                      />
                     </NavLink>
                   </Nav.Link>
                 </>

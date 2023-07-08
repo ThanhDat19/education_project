@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Form, Button, Card } from "react-bootstrap";
+import { Form, Button, Card, Table } from "react-bootstrap";
 import AppUrl from "../../api/AppUrl";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSquareCheck } from "@fortawesome/free-solid-svg-icons";
 
 const Quiz = ({ tests, user, lesson }) => {
   const [answers, setAnswers] = useState([]);
@@ -136,9 +138,24 @@ const Quiz = ({ tests, user, lesson }) => {
 
   const testResultView = testResult && (
     <>
-      <h1>Bạn đã kiểm tra rồi: </h1>
-      <br />
-      <p>Tổng Điểm: {testResult.test_result}</p>
+      <Table striped bordered hover size="sm">
+        <thead>
+          <tr>
+            <th>Trạng thái kiểm tra</th>
+            <th>Người thực hiện</th>
+            <th>Tổng điểm</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <FontAwesomeIcon icon={faSquareCheck} color="blue" />
+            </td>
+            <td>{user.name}</td>
+            <td>{testResult.test_result}</td>
+          </tr>
+        </tbody>
+      </Table>
     </>
   );
 
@@ -158,8 +175,8 @@ const Quiz = ({ tests, user, lesson }) => {
                   {question.question_image ? (
                     <Card.Img
                       variant="top"
-                      src={"http://hoctaptructuyen.edu.vn" + question.question_image}
-                      style={{ width: "40%" }}
+                      src={"http://127.0.0.1:8000" + question.question_image}
+                      style={{ width: "60%" }}
                     />
                   ) : (
                     ""

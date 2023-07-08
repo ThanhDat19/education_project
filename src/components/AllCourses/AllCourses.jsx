@@ -10,6 +10,7 @@ import AppUrl from "../../api/AppUrl";
 const Courses = () => {
   const [allCourses, setAllCourses] = useState([]);
   const [totalCourse, setTotalCourse] = useState(0);
+  const [categories, setCategories] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
   const [searchTitle, setSearchTitle] = useState("");
@@ -36,6 +37,8 @@ const Courses = () => {
       setCurrentPage(page);
       const response = await axios.get(AppUrl.CourseAll, { params: { page } });
       if (response.data.courses.data) {
+        console.log(response.data);
+        setCategories(response.data.categories);
         setAllCourses(response.data.courses.data);
         setLoading(false);
         setTotalCourse(response.data.courses.total);
@@ -102,7 +105,7 @@ const Courses = () => {
         <Card border="light" style={{ margin: "4px" }}>
           <Card.Img
             variant="top"
-            src={"http://hoctaptructuyen.edu.vn" + item.course_image}
+            src={"http://127.0.0.1:8000" + item.course_image}
             alt={item.title}
           />
           <Card.Body>
@@ -136,7 +139,7 @@ const Courses = () => {
                   marginBottom: filteredCourses.length === 0 ? "0" : "10px",
                 }}
                 type="text"
-                placeholder="Search..."
+                placeholder="Tìm kiếm..."
                 onChange={(e) => setSearchTitle(e.target.value)}
               />
               <select
@@ -144,15 +147,17 @@ const Courses = () => {
                 value={selectedCategory}
                 onChange={handleCategoryChange}
               >
-                <option value="">All Categories</option>
-                <option value="1">Web Development</option>
-                <option value="2">Mobile Development</option>
-                <option value="3">PHP</option>
+                <option value="">Tất cả</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
               </select>
               <input
                 style={{ width: "100%", height: "30px" }}
                 type="number"
-                placeholder="Min Price"
+                placeholder="Giá thấp nhất"
                 name="min"
                 value={selectedPriceRange.min}
                 onChange={handlePriceRangeChange}
@@ -160,7 +165,7 @@ const Courses = () => {
               <input
                 style={{ width: "100%", height: "30px", marginTop: "10px" }}
                 type="number"
-                placeholder="Max Price"
+                placeholder="Giá cao nhất"
                 name="max"
                 value={selectedPriceRange.max}
                 onChange={handlePriceRangeChange}

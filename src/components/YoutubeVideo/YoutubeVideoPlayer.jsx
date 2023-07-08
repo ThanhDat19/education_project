@@ -48,7 +48,7 @@ const YoutubeVideoPlayer = ({ url, user, lesson, course, updateLesson }) => {
           console.log(error);
         });
 
-      updateLesson(lesson, duration);
+      updateLesson(duration);
     }
   };
   const handleProgress = (progress) => {

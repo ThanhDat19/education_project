@@ -23,7 +23,7 @@ const Courses = () => {
               <Col lg={6} md={6} sm={12} className="p-2">
                 <img
                   className="courseImg"
-                  src={"http://hoctaptructuyen.edu.vn" + item.course_image}
+                  src={"http://127.0.0.1:8000" + item.course_image}
                   alt={item.title}
                 />
               </Col>

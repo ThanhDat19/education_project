@@ -196,7 +196,7 @@ const CourseDetails = (props) => {
           <Col lg={8} md={6} sm={12}>
             <h1 className="courseDetailsText">{course.title}</h1>
             <img
-              src={"http://hoctaptructuyen.edu.vn" + course.course_image}
+              src={"http://127.0.0.1:8000" + course.course_image}
               className="courseDetailsImg"
             />
             <br />

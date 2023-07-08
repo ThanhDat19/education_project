@@ -233,7 +233,7 @@ const TeacherCourse = ({ user }) => {
         <Card border="light" style={{ margin: "4px" }}>
           <Card.Img
             variant="top"
-            src={"http://hoctaptructuyen.edu.vn" + item.course_image}
+            src={"http://127.0.0.1:8000" + item.course_image}
             alt={item.title}
           />
           <Card.Body>
