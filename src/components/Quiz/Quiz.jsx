@@ -172,7 +172,7 @@ const Quiz = ({ tests, user, lesson }) => {
               <Card key={question.id} className="mb-4">
                 <Card.Body>
                   <Card.Title>{question.question}</Card.Title>
-                  {question.question_image ? (
+                  {question.question_image && question.question_image.substring(question.question_image.lastIndexOf("/") + 1) !== "default.png" ? (
                     <Card.Img
                       variant="top"
                       src={"http://127.0.0.1:8000" + question.question_image}

@@ -246,18 +246,23 @@ const TeacherCourse = ({ user }) => {
             >
               Xem chi tiết
             </Link>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginTop: "8px",
+              }}
+            >
               <div>
                 <Button
                   variant="outline-danger"
-                  size="lg"
+                  size="sm"
                   onClick={deleteCourse}
                   style={{
                     borderRadius: "10px",
                     fontSize: "16px",
-                    marginRight: "5px",
                   }}
-                  className="px-5"
+                  className="w-50"
                 >
                   Xóa
                 </Button>
@@ -277,13 +282,23 @@ const TeacherCourse = ({ user }) => {
 
                 <Button
                   variant="outline-primary"
-                  size="lg"
+                  size="sm"
                   as={Link}
                   to={"/edit-course/" + item.id}
                   style={{ borderRadius: "10px", fontSize: "16px" }}
-                  className="px-5"
+                  className="w-50"
                 >
                   Sửa
+                </Button>
+                <Button
+                  variant="outline-dark"
+                  size="sm"
+                  as={Link}
+                  to={"/manage-lesson-of-course/" + item.id}
+                  style={{ borderRadius: "10px", fontSize: "16px" }}
+                  className="w-100 mt-1"
+                >
+                  Quản lý bài học
                 </Button>
               </div>
             </div>

@@ -4,12 +4,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import AppUrl from "../../api/AppUrl";
+import profanityList from "./profanityList";
+import BadWordsFilter from "bad-words";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Comment = ({ user, lesson }) => {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editingComment, setEditingComment] = useState("");
+  const filter = new BadWordsFilter();
+  profanityList.forEach((word) => {
+    filter.addWords(word);
+  });
 
   useEffect(() => {
     // Fetch comments from Laravel backend API
@@ -39,9 +47,23 @@ const Comment = ({ user, lesson }) => {
         author: user.id,
         content: comment,
         lesson: lesson,
+        impolite: 0,
       };
 
-      // Send comment to Laravel backend API
+      if (filter.isProfane(comment)) {
+        newComment.impolite = 1;
+        axios
+          .post(AppUrl.postComments + user.id, newComment)
+          .then((response) => {
+            setComment("");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+        toast.error("Nội dung không phù hợp");
+        console.log("Nội dung không phù hợp");
+        return;
+      }
       axios
         .post(AppUrl.postComments + user.id, newComment)
         .then((response) => {
@@ -52,6 +74,8 @@ const Comment = ({ user, lesson }) => {
         .catch((error) => {
           console.error(error);
         });
+
+      toast.success("Bình luận thành công");
     }
   };
 
@@ -78,6 +102,11 @@ const Comment = ({ user, lesson }) => {
   };
 
   const handleSaveEdit = (commentId) => {
+    if (filter.isProfane(editingComment)) {
+      toast.error("Nội dung không phù hợp");
+      console.log("Nội dung không phù hợp");
+      return;
+    }
     const updatedComment = {
       content: editingComment,
     };
@@ -99,6 +128,7 @@ const Comment = ({ user, lesson }) => {
         setComments(updatedComments);
         setEditingCommentId(null);
         setEditingComment("");
+        toast.success("Sửa bình luận thành công");
       })
       .catch((error) => {
         console.error(error);
@@ -127,14 +157,6 @@ const Comment = ({ user, lesson }) => {
     ? comments.map((comment) => (
         <ListGroup.Item key={comment.id}>
           <div className="d-flex align-items-start">
-            {/* <Image
-              src={comment.avatar}
-              roundedCircle
-              className="mr-3"
-              width={50}
-              height={50}
-              alt="Avatar"
-            /> */}
             <div>
               <div className="mb-2">
                 <strong>{comment.user.name}</strong>{" "}
@@ -220,6 +242,7 @@ const Comment = ({ user, lesson }) => {
       <ListGroup className="overflow-auto" style={{ height: "400px" }}>
         {commentView}
       </ListGroup>
+      <ToastContainer />
     </div>
   );
 };

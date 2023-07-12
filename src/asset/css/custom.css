@@ -655,3 +655,7 @@ a.twitter {
 #basic-nav-dropdown{
   color: #fff !important;
 }
+
+.dropdown-toggle::after{
+  display: none !important;
+}

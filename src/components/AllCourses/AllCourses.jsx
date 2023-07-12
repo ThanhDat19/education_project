@@ -36,14 +36,14 @@ const Courses = () => {
     try {
       setCurrentPage(page);
       const response = await axios.get(AppUrl.CourseAll, { params: { page } });
-      if (response.data.courses.data) {
+      console.log(response.data);
+      if (response.data.courses) {
         console.log(response.data);
         setCategories(response.data.categories);
-        setAllCourses(response.data.courses.data);
+        setAllCourses(response.data.courses);
         setLoading(false);
         setTotalCourse(response.data.courses.total);
         setTotalPages(response.data.total_pages);
-        console.log(response.data);
       }
     } catch (error) {
       console.error("Error fetching courses:", error);
@@ -111,7 +111,32 @@ const Courses = () => {
           <Card.Body>
             <Card.Title>{item.title}</Card.Title>
             {/* <Card.Text>{parse(item.description)}</Card.Text> */}
-            <Card.Text className="courseViewMore">${item.price}</Card.Text>
+            {item.discount ? (
+              item.discount.discount_types === 1 ? (
+                <div>
+                  <Card.Text className="courseViewMore text-decoration-line-through">
+                    ${item.price}
+                  </Card.Text>
+                  <h6 className="text-danger courseViewMore">
+                    $
+                    {item.price * ((100 - item.discount.reduction_rate) * 0.01)}
+                  </h6>
+                </div>
+              ) : (
+                <div>
+                  <Card.Text className="courseViewMore text-decoration-line-through">
+                    ${item.price}
+                  </Card.Text>
+                  <h6 className="text-danger courseViewMore">
+                    ${item.price - item.discount.reduction_rate}
+                  </h6>
+                </div>
+              )
+            ) : (
+              <div>
+                <Card.Text className="courseViewMore">${item.price}</Card.Text>
+              </div>
+            )}
             <Link
               to={"/course-details/" + item.id}
               className="float-left courseViewMore"

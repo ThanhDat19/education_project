@@ -22,6 +22,7 @@ import { useSelector } from "react-redux";
 
 var amount;
 var courseSate;
+var discount;
 const CourseDetails = (props) => {
   const [course, setCourse] = useState([]);
   const [id] = useState(props.id);
@@ -64,6 +65,18 @@ const CourseDetails = (props) => {
       setCourse(response.data.data);
       console.log(response.data.data);
       amount = response.data.data.price;
+      if (response.data.data.discount) {
+        if (response.data.data.discount.discount_types == 1) {
+          amount =
+            response.data.data.price *
+            ((100 - response.data.data.discount.reduction_rate) * 0.01);
+        } else {
+          amount =
+            response.data.data.price -
+            response.data.data.discount.reduction_rate;
+        }
+      }
+      console.log(amount);
       courseSate = response.data.status;
       if (courseSate) {
         updatePaymentState(true);
@@ -114,6 +127,7 @@ const CourseDetails = (props) => {
               shape: "pill",
             }}
             createOrder={(data, actions) => {
+              console.log(amount);
               return actions.order.create({
                 purchase_units: [
                   {
@@ -250,7 +264,22 @@ const CourseDetails = (props) => {
 
               <div className="price-wrap text-center">
                 <h5>
-                  Giá Bán:<span> ${course.price}</span>
+                  {course.discount ? (
+                    <div>
+                      {" "}
+                      Giá Bán:
+                      <span className="text-decoration-line-through">
+                        {" "}
+                        ${course.price}
+                      </span>
+                      <h2 className="text-danger">${amount}</h2>
+                    </div>
+                  ) : (
+                    <div>
+                      {" "}
+                      Giá Bán:<span> ${course.price}</span>
+                    </div>
+                  )}
                 </h5>
                 {/* Paypal */}
 

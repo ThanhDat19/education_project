@@ -19,6 +19,8 @@ const YoutubeVideoPlayer = ({ url, user, lesson, course, updateLesson }) => {
 
   const checkLessonCompletion = () => {
     if (user.roles === "student") {
+      console.log(user.id);
+
       // Code to check if the lesson is completed in the database or make an API call
       axios
         .post(AppUrl.getLessonOfStudent + user.id, {
@@ -33,6 +35,8 @@ const YoutubeVideoPlayer = ({ url, user, lesson, course, updateLesson }) => {
   };
 
   const updateLessonOfStudent = async (currentTime) => {
+    console.log(user.id);
+
     if (user.roles === "student") {
       console.log(currentTime.toFixed());
       await axios

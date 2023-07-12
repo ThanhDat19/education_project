@@ -13,7 +13,7 @@ class AppUrl {
   static Services = this.BaseUrl + "/services";
   // Information url
   static Information = this.BaseUrl + "/information";
-  static UpdateInformation=this.BaseUrl+"/update-information/";
+  static UpdateInformation = this.BaseUrl + "/update-information/";
   // Footer url
   static FooterData = this.BaseUrl + "/footer-data";
   // Course url
@@ -42,6 +42,11 @@ class AppUrl {
   static teacherPostCourse = this.BaseUrl + "/post-course-teacher";
   static DeleteCourse = this.BaseUrl + "/delete-course-teacher";
   static UpdateCourse = this.BaseUrl + "/update-course-teacher/";
+
+  //Lesson
+  static teacherPostLesson = this.BaseUrl + "/post-lesson-teacher";
+  static DeleteLesson = this.BaseUrl + "/delete-lesson-teacher/";
+  static UpdateLesson = this.BaseUrl + "/update-lesson-teacher/";
 
   //Test
   static teacherGetTests = this.BaseUrl + "/get-tests-teacher/";

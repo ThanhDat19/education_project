@@ -103,19 +103,35 @@ const UpdateInformation = ({ user }) => {
         <div className="reviewbottom"></div>
       </Row>
       <Row>
-        <Col lg={7} md={6} sm={12}>
+        <Col lg={7} md={6} sm={12} className="text-center border-dark">
           {}
           {avartaPreview ? (
             <img
               src={avartaPreview}
               alt="Preview"
-              style={{ marginTop: "10px", maxWidth: "400px" }}
+              style={{
+                marginTop: "10px",
+                maxWidth: "300px",
+                objectFit: "cover",
+                minWidth: "300px",
+                maxHeight: "300px",
+                minHeight: "300px",
+                borderRadius:"100%",
+              }}
             />
           ) : (
             <img
               src={face}
               alt="Preview"
-              style={{ marginTop: "10px", maxWidth: "400px" }}
+              style={{
+                marginTop: "10px",
+                maxWidth: "300px",
+                objectFit: "cover",
+                minWidth: "300px",
+                maxHeight: "300px",
+                minHeight: "300px",
+                borderRadius:"100%"
+              }}
             />
           )}
         </Col>

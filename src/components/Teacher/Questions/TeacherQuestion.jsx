@@ -126,6 +126,7 @@ const TeacherQuestion = ({ user }) => {
         // Hiển thị thông báo thành công
         // alert("Thêm câu hỏi thành công!");
         toast.success("Thêm câu hỏi thành công!");
+        getQuestions(1);
       } else {
         // Hiển thị thông báo lỗi nếu thêm câu hỏi không thành công
         // alert("Thêm câu hỏi không thành công. Vui lòng thử lại sau.");
@@ -235,6 +236,7 @@ const TeacherQuestion = ({ user }) => {
         handleCloseEditQuestionModal();
         // Hiển thị thông báo thành công
         toast.success("Chỉnh sửa câu hỏi thành công!");
+        getQuestions(1);
       } else {
         // Hiển thị thông báo lỗi nếu chỉnh sửa câu hỏi không thành công
         // alert("Chỉnh sửa câu hỏi không thành công. Vui lòng thử lại sau.");

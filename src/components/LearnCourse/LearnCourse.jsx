@@ -61,7 +61,6 @@ const LearnCourse = (props) => {
   }, [selectedLesson]);
 
   const handleVideoSelect = async (video, id) => {
-    // console.log("call handleVideoSelect", id);
     setSelectedVideo(video);
     setSelectedLesson(id);
   };
@@ -71,11 +70,39 @@ const LearnCourse = (props) => {
     const updatedLessons = lessons.map((lesson) => {
       // Kiểm tra nếu id của lesson trùng khớp với idLesson
       if (lesson.id == selectedLesson) {
-        const data = lesson.students;
+        let data = lesson.students;
         console.log(data);
         console.log("data", data.filter((student) => student.id == user.id)[0]);
 
         if (data.filter((student) => student.id == user.id)[0]) {
+          console.log(data);
+          if (
+            data.filter((student) => student.id == user.id)[0].watched_video <
+            value
+          ) {
+            data.filter((student) => student.id == user.id)[0].watched_video =
+              value;
+            const percent = (value / lesson.video_time) * 100;
+            if (percent >= 80) {
+              data.filter(
+                (student) => student.id == user.id
+              )[0].lesson_status = 1;
+            }
+            // Cập nhật giá trị của lesson
+            return {
+              ...lesson,
+              students: data,
+            };
+          }
+        } else {
+          const userTemp = user;
+          userTemp.watched_video = 0;
+          userTemp.lesson_status = 0;
+          lesson.students.push(userTemp);
+          setLessons([...lessons, lesson]);
+
+          data = lesson.students;
+          console.log(data);
           if (
             data.filter((student) => student.id == user.id)[0].watched_video <
             value
