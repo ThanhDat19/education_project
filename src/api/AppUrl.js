@@ -77,6 +77,9 @@ class AppUrl {
   //Student
   //Courses
   static studentGetCourses = this.BaseUrl + "/get-courses";
+
+  //Reviews
+  static ReView = this.BaseUrl + "/post-review";
 }
 
 export default AppUrl;

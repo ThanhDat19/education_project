@@ -10,7 +10,15 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState, useCallback } from "react";
 import { Fragment } from "react";
-import { Col, Container, Row, Button, Form, Spinner } from "react-bootstrap";
+import {
+  Col,
+  Container,
+  Row,
+  Button,
+  Form,
+  Spinner,
+  ListGroup,
+} from "react-bootstrap";
 import { BigPlayButton, Player } from "video-react";
 import YouTube from "react-youtube";
 import AppUrl from "../../api/AppUrl";
@@ -19,6 +27,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useSelector } from "react-redux";
+import { FaStar } from "react-icons/fa";
 
 var amount;
 var courseSate;
@@ -31,6 +40,11 @@ const CourseDetails = (props) => {
   const user = useSelector((state) => state.auth.user);
   const [paymentState, setPaymentState] = useState(false);
   const [loading, setLoading] = useState(true);
+  const stars = Array(5).fill(0);
+  const colors = {
+    orange: "#FFBA5A",
+    grey: "#a9a9a9",
+  };
 
   if (error) {
     // Display error message, modal or redirect user to error page
@@ -107,6 +121,24 @@ const CourseDetails = (props) => {
     const formattedSeconds = seconds.toString().padStart(2, "0");
 
     return `${formattedHours} giờ ${formattedMinutes} phút`;
+  };
+
+  const formatTimestamp = (timestamp) => {
+    const now = new Date();
+    const commentTimestamp = new Date(timestamp);
+    const diffInMinutes = Math.floor((now - commentTimestamp) / (1000 * 60));
+
+    if (diffInMinutes < 1) {
+      return "Vừa mới";
+    } else if (diffInMinutes < 60) {
+      return `${diffInMinutes} phút trước`;
+    } else if (diffInMinutes < 1440) {
+      const diffInHours = Math.floor(diffInMinutes / 60);
+      return `${diffInHours} giờ trước`;
+    } else {
+      const diffInDays = Math.floor(diffInMinutes / 1440);
+      return `${diffInDays} ngày trước`;
+    }
   };
 
   const PayPalView =
@@ -199,6 +231,44 @@ const CourseDetails = (props) => {
     ) : (
       "Hãy đăng nhập (Tài khoản học viên)"
     );
+
+  const reviewList =
+    course && course.reviews
+      ? course.reviews.map((review) => (
+          <ListGroup.Item key={review.id}>
+            <div className="d-flex align-items-start">
+              <div>
+                <div className="mb-2">
+                  <strong>{review.user_name}</strong>{" "}
+                  {formatTimestamp(review.created_at)}
+                  <div style={styles.stars} className="mt-2">
+                    {stars.map((_, index) => {
+                      return (
+                        <FaStar
+                          key={index}
+                          size={16}
+                          color={
+                            review.star_count > index
+                              ? colors.orange
+                              : colors.grey
+                          }
+                          style={{
+                            marginRight: 10,
+                            cursor: "pointer",
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <>
+              <div>{review.content}</div>
+            </>
+          </ListGroup.Item>
+        ))
+      : "";
   return loading ? (
     <Spinner animation="border" role="status">
       <span className="visually-hidden">Loading...</span>
@@ -299,62 +369,47 @@ const CourseDetails = (props) => {
           </Col>
         </Row>
       </Container>
-      {/* <Container>
+      <Container>
         <Row>
           <Col lg={8} md={6} sm={12}>
-            <div className="widget_feature">
-              <h1 className="widget-title text-center">Skill You Need</h1>
+            <div className="">
+              <h1 className="widget-title text-center">Đánh giá khóa học</h1>
               <hr />
-              <ul>
-                <li>
-                  <FontAwesomeIcon
-                    className="iconBullent"
-                    icon={faCheckSquare}
-                  />{" "}
-                  Metus interdum metus
-                </li>
-                <li>
-                  <FontAwesomeIcon
-                    className="iconBullent"
-                    icon={faCheckSquare}
-                  />{" "}
-                  Metus interdum metus
-                </li>
-                <li>
-                  <FontAwesomeIcon
-                    className="iconBullent"
-                    icon={faCheckSquare}
-                  />{" "}
-                  Metus interdum metus
-                </li>
-                <li>
-                  <FontAwesomeIcon
-                    className="iconBullent"
-                    icon={faCheckSquare}
-                  />{" "}
-                  Metus interdum metus
-                </li>
-                <li>
-                  <FontAwesomeIcon
-                    className="iconBullent"
-                    icon={faCheckSquare}
-                  />{" "}
-                  Metus interdum metus
-                </li>
-                <li>
-                  <FontAwesomeIcon
-                    className="iconBullent"
-                    icon={faCheckSquare}
-                  />{" "}
-                  Metus interdum metus
-                </li>
-              </ul>
+              <ListGroup className="overflow-auto" style={{ height: "400px" }}>
+                {reviewList}
+              </ListGroup>
             </div>
           </Col>
         </Row>
-      </Container> */}
+      </Container>
     </>
   );
+};
+
+const styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  stars: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  textarea: {
+    border: "1px solid #a9a9a9",
+    borderRadius: 5,
+    padding: 10,
+    margin: "20px 0",
+    minHeight: 100,
+    width: 300,
+  },
+  button: {
+    border: "1px solid #a9a9a9",
+    borderRadius: 5,
+    width: 300,
+    padding: 10,
+  },
 };
 
 export default CourseDetails;

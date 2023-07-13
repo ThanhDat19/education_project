@@ -14,7 +14,7 @@ const AboutPage = () => {
   return (
     <Fragment>
       <TopNavigation />
-      <PageTop pageTitle="About Me" />
+      <PageTop pageTitle="Thông Tin Về Chúng Tôi" />
       <AboutMe />
       <AboutDescription />
       <Footer />

@@ -6,6 +6,7 @@ import axios from "axios";
 import parse from "html-react-parser";
 import ReactPaginate from "react-paginate";
 import AppUrl from "../../api/AppUrl";
+import { FaStar } from "react-icons/fa";
 
 const Courses = () => {
   const [allCourses, setAllCourses] = useState([]);
@@ -21,6 +22,11 @@ const Courses = () => {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredCourses, setFilteredCourses] = useState([]);
+  const stars = Array(5).fill(0);
+  const colors = {
+    orange: "#FFBA5A",
+    grey: "#a9a9a9",
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -109,8 +115,24 @@ const Courses = () => {
             alt={item.title}
           />
           <Card.Body>
-            <Card.Title>{item.title}</Card.Title>
-            {/* <Card.Text>{parse(item.description)}</Card.Text> */}
+            <div style={styles.stars} className="mt-2">
+              {stars.map((_, index) => {
+                return (
+                  <FaStar
+                    key={index}
+                    size={20}
+                    color={
+                      item.averageRating > index ? colors.orange : colors.grey
+                    }
+                    style={{
+                      marginRight: 10,
+                      cursor: "pointer",
+                    }}
+                  />
+                );
+              })}
+            </div>
+            <Card.Title className="mt-2">{item.title}</Card.Title>
             {item.discount ? (
               item.discount.discount_types === 1 ? (
                 <div>
@@ -225,5 +247,29 @@ const Courses = () => {
     </Fragment>
   );
 };
-
+const styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  stars: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  textarea: {
+    border: "1px solid #a9a9a9",
+    borderRadius: 5,
+    padding: 10,
+    margin: "20px 0",
+    minHeight: 100,
+    width: 300,
+  },
+  button: {
+    border: "1px solid #a9a9a9",
+    borderRadius: 5,
+    width: 300,
+    padding: 10,
+  },
+};
 export default Courses;

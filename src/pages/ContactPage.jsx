@@ -13,7 +13,7 @@ const ContactPage = () => {
   return (
     <Fragment>
       <TopNavigation />
-      <PageTop pageTitle="Contact Us" />
+      <PageTop pageTitle="Liên Hệ" />
       <ContactSection />
       <Footer />
     </Fragment>

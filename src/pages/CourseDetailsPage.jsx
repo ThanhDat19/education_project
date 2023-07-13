@@ -12,7 +12,7 @@ const CourseDetailsPage = ({user}) => {
   return (
     <Fragment>
       <TopNavigation />
-      <PageTop pageTitle="Course Details"/>
+      <PageTop pageTitle="Chi Tiết Khóa Học"/>
       <CourseDetails  id={id} user={user}/>
       <Footer />
     </Fragment>

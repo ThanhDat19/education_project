@@ -21,6 +21,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ProgressBar } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import RatingStar from "../../RatingStar/RatingStar";
+import { FaStar } from "react-icons/fa";
 
 const StudentCourse = ({ user }) => {
   const [allCourses, setAllCourses] = useState([]);
@@ -32,21 +34,19 @@ const StudentCourse = ({ user }) => {
   const [searchTitle, setSearchTitle] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedPriceRange, setSelectedPriceRange] = useState({
     min: "",
     max: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredCourses, setFilteredCourses] = useState([]);
-  const [showAddCourseModal, setShowAddCourseModal] = useState(false);
-  const [newCourseTitle, setNewCourseTitle] = useState("");
-  const [courseCategoryId, setCourseCategoryId] = useState("");
-  const [courseType, setCourseType] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-  const [showAlertDelete, setShowAlertDelete] = useState(false);
+  const [showReViewModal, setShowReViewModal] = useState(false);
+  const stars = Array(5).fill(0);
+  const colors = {
+    orange: "#FFBA5A",
+    grey: "#a9a9a9",
+  };
 
   useEffect(() => {
     if (user) {
@@ -121,6 +121,18 @@ const StudentCourse = ({ user }) => {
     getCourses(1);
   };
 
+  const handleCloseReViewCourse = async () => {
+    setShowReViewModal(false);
+    setTimeout(() => {
+      getCourses(1, user.id);
+      filterCourses();
+    }, 1000);
+  };
+  const handleReViewModal = (item) => {
+    console.log(item);
+    setSelectedCourse(item.course_id);
+    setShowReViewModal(true);
+  };
   const renderCourses = () => {
     if (loading) {
       return <p>Đang tải...</p>;
@@ -139,7 +151,24 @@ const StudentCourse = ({ user }) => {
             alt={item.title}
           />
           <Card.Body>
-            <Card.Title>{item.title}</Card.Title>
+            <div style={styles.stars} className="mt-2">
+              {stars.map((_, index) => {
+                return (
+                  <FaStar
+                    key={index}
+                    size={24}
+                    color={
+                      item.averageRating > index ? colors.orange : colors.grey
+                    }
+                    style={{
+                      marginRight: 10,
+                      cursor: "pointer",
+                    }}
+                  />
+                );
+              })}
+            </div>
+            <Card.Title className="mt-2">{item.title}</Card.Title>
             {/* <Card.Text>{
               parse(item.description)}</Card.Text> */}
             <Card.Text className="courseViewMore">${item.price}</Card.Text>
@@ -162,6 +191,13 @@ const StudentCourse = ({ user }) => {
               )}
             </div>
           </Card.Body>
+          <Card.Footer>
+            {item.rating === null ? (
+              <Button onClick={() => handleReViewModal(item)}>Đánh Giá</Button>
+            ) : (
+              ""
+            )}
+          </Card.Footer>
         </Card>
       </Col>
     ));
@@ -242,8 +278,51 @@ const StudentCourse = ({ user }) => {
         </Row>
       </Container>
       <ToastContainer />
+      <Modal
+        show={showReViewModal}
+        onHide={handleCloseReViewCourse}
+        size="lg"
+        style={{ maxWidth: "2000px", width: "100%" }}
+      >
+        <Modal.Body>
+          <RatingStar
+            user={user}
+            course={selectedCourse}
+            handleCloseReViewCourse={handleCloseReViewCourse}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseReViewCourse}>
+            Đóng
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Fragment>
   );
 };
-
+const styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  stars: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  textarea: {
+    border: "1px solid #a9a9a9",
+    borderRadius: 5,
+    padding: 10,
+    margin: "20px 0",
+    minHeight: 100,
+    width: 300,
+  },
+  button: {
+    border: "1px solid #a9a9a9",
+    borderRadius: 5,
+    width: 300,
+    padding: 10,
+  },
+};
 export default StudentCourse;
